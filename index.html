@@ -1,133 +1,269 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jaime Claure // Assets & Document Server</title>
-  <!-- Tailwind CSS CDN para renderizado rápido Edge -->
-  <script src="https://tailwindcss.com"></script>
-  <!-- Fuentes tipográficas del ecosistema principal -->
-  <link rel="preconnect" href="https://googleapis.com">
-  <link rel="preconnect" href="https://gstatic.com" crossorigin>
-  <link href="https://googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-  
-  <style>
-    body {
-      font-family: 'Outfit', sans-serif;
-    }
-    .font-serif {
-      font-family: 'DM Serif Display', serif;
-    }
-  </style>
-  
-  <script>
-    // Configuración de la paleta cromática exacta de tu marca
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              dark: '#030712', // Fondo oscuro profundo de Vercel
-              cyan: '#06B6D4', // Celeste técnico
-              orange: '#EA580C', // Naranja creativo
-              card: '#0B0F19' // Gris de las tarjetas de consola
-            }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaime Claure // Assets & Document Server</title>
+
+    <!-- Fuentes tipográficas estricta del ecosistema principal -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* VARIABLES CROMÁTICAS BAUHAUS Y RESETEO SEMÁNTICO (Inmune a Bloqueadores) */
+        :root {
+            --bg-dark: #030712;
+            /* Fondo oscuro profundo de Vercel */
+            --color-cyan: #06B6D4;
+            /* Celeste técnico de tu marca */
+            --color-orange: #EA580C;
+            /* Naranja creativo de tu marca */
+            --bg-card: #0B0F19;
+            /* Gris de las tarjetas de consola */
+            --text-light: #E5E7EB;
+            /* Texto neutral claro */
+            --text-muted: #9CA3AF;
+            /* Texto gris de telemetría */
+            --border-dark: #1F2937;
+            /* Bordes finos de celdas */
         }
-      }
-    }
-  </script>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100-screen;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow-x: hidden;
+            padding: 24px;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 48px;
+            }
+        }
+
+        /* TIPOGRAFÍA SERIF RADICAL */
+        .font-serif {
+            font-family: 'DM Serif Display', serif;
+        }
+
+        /* RED NEURONAL / ESTRUCTURA BLUEPRINT DE FONDO */
+        .blueprint-grid {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            right: 24px;
+            bottom: 24px;
+            border: 1px dashed rgba(31, 41, 55, 0.6);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @media (min-width: 768px) {
+            .blueprint-grid {
+                top: 48px;
+                left: 48px;
+                right: 48px;
+                bottom: 48px;
+            }
+        }
+
+        /* ARQUITECTURA DE REJILLA EDITORIAL ASIMÉTRICA */
+        .layout-grid {
+            display: grid;
+            grid-cols-1: 1fr;
+            gap: 32px;
+            z-index: 10;
+            max-width: 1024px;
+            width: 100%;
+            margin: 48px auto;
+        }
+
+        @media (min-width: 768px) {
+            .layout-grid {
+                grid-template-columns: repeat(12, minmax(0, 1fr));
+            }
+
+            .col-left {
+                grid-column: span 5 / span 5;
+            }
+
+            .col-right {
+                grid-column: span 7 / span 7;
+            }
+        }
+
+        /* ELEMENTOS DE CONSOLA Y EFECTOS HOVER */
+        .card-node {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            padding: 16px;
+            border-radius: 2px;
+            transition: all 0.3s ease-out;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-node:hover {
+            border-color: #374151;
+        }
+
+        /* ANIMACIÓN LED PULSE */
+        .led-pulse {
+            width: 8px;
+            height: 8px;
+            background-color: var(--color-cyan);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .4;
+            }
+        }
+    </style>
 </head>
-<body class="bg-brand-dark text-neutral-200 min-h-screen flex flex-col justify-between p-6 md:p-12 relative overflow-x-hidden selection:bg-brand-cyan/20 selection:text-brand-cyan">
 
-  <!-- Efecto de Red Neuronal / Blueprint sutil de fondo -->
-  <div class="absolute inset-0 border border-dashed border-neutral-900/40 m-6 md:m-12 pointer-events-none z-0"></div>
+<body>
 
-  <!-- CABECERA: Metadata e Identidad -->
-  <header class="w-full max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center z-10 border-b border-neutral-900 pb-6">
-    <div>
-      <span class="text-[10px] tracking-[0.3em] uppercase text-brand-cyan font-mono flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span> jaimeclaure.github.io // active_node
-      </span>
-      <h1 class="font-serif text-3xl md:text-4xl text-neutral-100 tracking-wide mt-2">Assets & Document Server</h1>
-    </div>
-    <div class="mt-4 md:mt-0">
-      <a href="https://jaimeclaure.com" target="_blank" rel="noopener noreferrer" class="text-xs font-mono border border-neutral-800 hover:border-brand-orange px-4 py-2 rounded-sm transition-all duration-300 flex items-center gap-1 text-neutral-400 hover:text-white">
-        MAIN PORTFOLIO <span>↗</span>
-      </a>
-    </div>
-  </header>
+    <!-- Línea de blueprint estructural -->
+    <div class="blueprint-grid"></div>
 
-  <!-- CONTENIDO PRINCIPAL: Repositorio Centralizado de Documentos -->
-  <main class="w-full max-w-5xl mx-auto my-12 z-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-    
-    <!-- Columna Izquierda: Introducción del Servidor (40% de ancho) -->
-    <div class="md:col-span-5 space-y-4">
-      <h2 class="text-xs uppercase tracking-[0.2em] text-neutral-500 font-mono">Terminal de Archivos</h2>
-      <p class="text-sm text-neutral-400 leading-relaxed">
-        Infraestructura dedicada al almacenamiento, distribución y renderizado de documentación técnica, papers de investigación y recursos multimedia del ecosistema de software e ingeniería.
-      </p>
-      <div class="p-4 bg-brand-card/60 border border-neutral-900 rounded-sm font-mono text-[11px] text-neutral-500 space-y-1">
-        <p>// SYSTEMS ENGINE PROTOCOL</p>
-        <p>status: encrypted_obfuscation_ready</p>
-        <p>hosting_provider: github_pages_edge</p>
-      </div>
-    </div>
+    <!-- CABECERA: Identidad y Conexión de Nodo -->
+    <header
+        style="max-width: 1024px; width: 100%; margin: 0 auto; border-bottom: 1px solid var(--border-dark); padding-bottom: 24px; display: flex; flex-direction: column; z-index: 10;">
+        <div
+            style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <span
+                    style="font-family: monospace; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-cyan); display: flex; align-items: center; gap: 8px;">
+                    <span class="led-pulse"></span> jaimeclaure.github.io // active_node
+                </span>
+                <h1 class="font-serif"
+                    style="font-size: 2.25rem; color: #F9FAFB; tracking-wide: 0.02em; margin-top: 8px;">Assets &
+                    Document Server</h1>
+            </div>
+            <div>
+                <a href="https://jaimeclaure.com" target="_blank" rel="noopener noreferrer"
+                    style="font-family: monospace; font-size: 12px; border: 1px solid #374151; padding: 8px 16px; border-radius: 2px; transition: all 0.3s; color: var(--text-muted); text-decoration: none;"
+                    onmouseover="this.style.borderColor='var(--color-orange)'; this.style.color='#FFF'"
+                    onmouseout="this.style.borderColor='#374151'; this.style.color='var(--text-muted)'">
+                    MAIN PORTFOLIO ↗
+                </a>
+            </div>
+        </div>
+    </header>
 
-    <!-- Columna Derecha: El Índice de Documentos Activos (70% de ancho) -->
-    <div class="md:col-span-7 space-y-4 w-full">
-      <h2 class="text-xs uppercase tracking-[0.2em] text-neutral-500 font-mono mb-4">Índice de Documentos e Investigaciones</h2>
-      
-      <div class="space-y-3">
-        
-        <!-- DOCUMENTO 1: Curriculum Vitae -->
-        <div class="group flex items-center justify-between p-4 bg-brand-card/30 border border-neutral-900 hover:border-neutral-800 transition-all duration-300 rounded-sm">
-          <div class="flex flex-col">
-            <span class="text-sm font-medium text-neutral-300 group-hover:text-brand-orange transition-colors">Curriculum Vitae // Senior Profile</span>
-            <span class="text-[11px] font-mono text-neutral-500 mt-0.5">Format: PDF • Size: ~350 KB • Type: Executive Resume</span>
-          </div>
-          <a href="/documentos/cv-jaime-claure.pdf" class="font-mono text-xs text-brand-cyan hover:text-white transition-colors duration-300 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-            VIEW <span class="text-[10px]">→</span>
-          </a>
+    <!-- CUERPO PRINCIPAL: Indexación de Documentaciones Científicas -->
+    <main class="layout-grid">
+
+        <!-- Bloque Izquierdo: Terminal Informativo -->
+        <div class="col-left" style="display: flex; flex-direction: column; gap: 16px;">
+            <h2
+                style="font-family: monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted);">
+                Terminal de Archivos</h2>
+            <p style="font-size: 14px; color: #9CA3AF; line-height: 1.6;">
+                Infraestructura estática dedicada al almacenamiento seguro, distribución y renderizado automatizado de
+                documentación de software, papers científicos e informes de arquitectura de datos.
+            </p>
+            <div
+                style="background-color: rgba(11, 15, 25, 0.6); border: 1px solid var(--border-dark); padding: 16px; border-radius: 2px; font-family: monospace; font-size: 11px; color: #4B5563; line-height: 1.5;">
+                <p style="color: var(--color-cyan);">// SYSTEMS ENGINE PROTOCOL</p>
+                <p>status: build_compiled_secure</p>
+                <p>hosting_provider: local_css_fallback_edge</p>
+            </div>
         </div>
 
-        <!-- DOCUMENTO 2: Paper de Investigación / Data Science -->
-        <div class="group flex items-center justify-between p-4 bg-brand-card/30 border border-neutral-900 hover:border-neutral-800 transition-all duration-300 rounded-sm">
-          <div class="flex flex-col">
-            <span class="text-sm font-medium text-neutral-300 group-hover:text-brand-cyan transition-colors">Tourism Demand Prediction Pipeline</span>
-            <span class="text-[11px] font-mono text-neutral-500 mt-0.5">Format: PDF (Indexado) • Scope: MSc. Deep Learning &amp; AI</span>
-          </div>
-          <a href="/documentos/paper-tourism-prediction.pdf" class="font-mono text-xs text-brand-cyan hover:text-white transition-colors duration-300 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-            VIEW <span class="text-[10px]">→</span>
-          </a>
+        <!-- Bloque Derecho: Listado de Repositorios e Investigaciones -->
+        <div class="col-right" style="display: flex; flex-direction: column; gap: 16px;">
+            <h2
+                style="font-family: monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-bottom: 8px;">
+                Índice de Documentos e Investigaciones</h2>
+
+            <!-- ÍTEM 1: Curriculum Vitae -->
+            <div class="card-node">
+                <div>
+                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;"
+                        onmouseover="this.style.color='var(--color-orange)'" onmouseout="this.style.color='#F3F4F6'">
+                        Curriculum Vitae // Senior Profile</p>
+                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: PDF •
+                        Size: ~350 KB • Type: Executive Resume</p>
+                </div>
+                <a href="/documentos/cv-jaime-claure.pdf"
+                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;">VIEW
+                    →</a>
+            </div>
+
+            <!-- ÍTEM 2: Paper de Deep Learning -->
+            <div class="card-node">
+                <div>
+                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;"
+                        onmouseover="this.style.color='var(--color-cyan)'" onmouseout="this.style.color='#F3F4F6'">
+                        Tourism Demand Prediction Pipeline</p>
+                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: PDF
+                        (Indexado) • Scope: MSc. Deep Learning &amp; AI</p>
+                </div>
+                <a href="/pdfjs/web/viewer.html?file=/documentos/paper-tourism-prediction.pdf#pagemode=bookmarks"
+                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;">VIEW
+                    →</a>
+            </div>
+
+            <!-- ÍTEM 3: Slides Interactivos -->
+            <div class="card-node">
+                <div>
+                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Algorithmic Trading Architecture
+                        Framework</p>
+                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format:
+                        Reveal.js HTML • Scope: System Schematics</p>
+                </div>
+                <a href="/slides/trading-framework/index.html"
+                    style="font-family: monospace; font-size: 12px; color: var(--color-orange); text-decoration: none; font-weight: 500;">RUN
+                    →</a>
+            </div>
+
         </div>
+    </main>
 
-        <!-- DOCUMENTO 3: Diapositivas de Presentación Interactiva -->
-        <div class="group flex items-center justify-between p-4 bg-brand-card/30 border border-neutral-900 hover:border-neutral-800 transition-all duration-300 rounded-sm">
-          <div class="flex flex-col">
-            <span class="text-sm font-medium text-neutral-300 group-hover:text-neutral-100 transition-colors">Algorithmic Trading Architecture Framework</span>
-            <span class="text-[11px] font-mono text-neutral-500 mt-0.5">Format: Reveal.js HTML • Scope: System Schematics</span>
-          </div>
-          <a href="/slides/trading-framework/index.html" class="font-mono text-xs text-brand-orange hover:text-white transition-colors duration-300 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-            RUN <span class="text-[10px]">→</span>
-          </a>
+    <!-- PIE DE PÁGINA: Derechos e Identidad Digital -->
+    <footer
+        style="max-width: 1024px; width: 100%; margin: 0 auto; border-top: 1px solid var(--border-dark); padding-top: 24px; display: flex; flex-direction: column; md:flex-direction: row; justify-content: space-between; align-items: center; font-family: monospace; font-size: 11px; color: #4B5563; gap: 16px;">
+        <div>
+            © 2026 Jaime Claure Alvarez. Todos los derechos reservados.
         </div>
-
-      </div>
-    </div>
-  </main>
-
-  <!-- PIE DE PÁGINA: Firmas de Ingeniería y Derechos -->
-  <footer class="w-full max-w-5xl mx-auto z-10 border-t border-neutral-900 pt-6 flex flex-col md:flex-row justify-between items-center text-xs font-mono text-neutral-600 space-y-2 md:space-y-0">
-    <div>
-      © 2026 Jaime Claure Alvarez. Todos los derechos reservados.
-    </div>
-    <div class="flex gap-4">
-      <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-400 transition-colors">GITHUB</a>
-      <span>•</span>
-      <a href="https://medium.com" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-400 transition-colors">MEDIUM</a>
-    </div>
-  </footer>
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+                style="color: #4B5563; text-decoration: none;" onmouseover="this.style.color='#9CA3AF'"
+                onmouseout="this.style.color='#4B5563'">GITHUB</a>
+            <span>•</span>
+            <a href="https://medium.com" target="_blank" rel="noopener noreferrer"
+                style="color: #4B5563; text-decoration: none;" onmouseover="this.style.color='#9CA3AF'"
+                onmouseout="this.style.color='#4B5563'">MEDIUM</a>
+        </div>
+    </footer>
 
 </body>
+
 </html>

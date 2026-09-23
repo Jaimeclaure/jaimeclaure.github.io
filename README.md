@@ -1,6 +1,6 @@
 # Jaime Claure Alvarez // Assets & Document Server
 > **Node Identity:** `https://github.io`
-> **Github profile:** `https://github.com/Jaimeclaure  
+> **Github profile:** `https://github.com/Jaimeclaure`
 > **Main Web:** `https://www.jaimeclaure.com`  
 > **Architecture Status:** Active // Production Edge
 
