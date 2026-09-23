@@ -13,7 +13,7 @@
         rel="stylesheet">
 
     <style>
-        /* VARIABLES CROMÁTICAS BAUHAUS Y RESETEO SEMÁNTICO (Inmune a Bloqueadores) */
+        /* VARIABLES CROMÁTICAS BAUHAUS Y RESETEO SEMÁNTICO */
         :root {
             --bg-dark: #030712;
             /* Fondo oscuro profundo de Vercel */
@@ -41,7 +41,7 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
             font-family: 'Outfit', sans-serif;
-            min-height: 100-screen;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -85,7 +85,7 @@
         /* ARQUITECTURA DE REJILLA EDITORIAL ASIMÉTRICA */
         .layout-grid {
             display: grid;
-            grid-cols-1: 1fr;
+            grid-template-columns: 1fr;
             gap: 32px;
             z-index: 10;
             max-width: 1024px;
@@ -193,7 +193,7 @@
                 style="background-color: rgba(11, 15, 25, 0.6); border: 1px solid var(--border-dark); padding: 16px; border-radius: 2px; font-family: monospace; font-size: 11px; color: #4B5563; line-height: 1.5;">
                 <p style="color: var(--color-cyan);">// SYSTEMS ENGINE PROTOCOL</p>
                 <p>status: build_compiled_secure</p>
-                <p>hosting_provider: local_css_fallback_edge</p>
+                <p>hosting_provider: secure_index_gateway</p>
             </div>
         </div>
 
@@ -206,42 +206,43 @@
             <!-- ÍTEM 1: Curriculum Vitae -->
             <div class="card-node">
                 <div>
-                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;"
-                        onmouseover="this.style.color='var(--color-orange)'" onmouseout="this.style.color='#F3F4F6'">
-                        Curriculum Vitae // Senior Profile</p>
+                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Curriculum Vitae // Senior Profile</p>
                     <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: PDF •
                         Size: ~350 KB • Type: Executive Resume</p>
                 </div>
-                <a href="/documentos/cv-jaime-claure.pdf"
-                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;">VIEW
-                    →</a>
+                <a href="documentos/mod10_defensa.pdf" target="_blank"
+                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;"
+                    onmouseover="this.style.color='var(--color-orange)'"
+                    onmouseout="this.style.color='var(--color-cyan)'">VIEW →</a>
             </div>
 
             <!-- ÍTEM 2: Paper de Deep Learning -->
             <div class="card-node">
                 <div>
-                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;"
-                        onmouseover="this.style.color='var(--color-cyan)'" onmouseout="this.style.color='#F3F4F6'">
-                        Tourism Demand Prediction Pipeline</p>
+                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Defensa</p>
                     <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: PDF
                         (Indexado) • Scope: MSc. Deep Learning &amp; AI</p>
                 </div>
-                <a href="/pdfjs/web/viewer.html?file=/documentos/paper-tourism-prediction.pdf#pagemode=bookmarks"
-                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;">VIEW
-                    →</a>
+                <a href="pdfjs/web/viewer.html?file=/documentos/paper-tourism-prediction.pdf#pagemode=bookmarks"
+                    target="_blank"
+                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;"
+                    onmouseover="this.style.color='var(--color-orange)'"
+                    onmouseout="this.style.color='var(--color-cyan)'">VIEW →</a>
             </div>
 
-            <!-- ÍTEM 3: Slides Interactivos -->
+            <!-- ÍTEM 3: PRESENTACIÓN PERSONALIZADA (Modificable según tu archivo real) -->
             <div class="card-node">
                 <div>
-                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Algorithmic Trading Architecture
-                        Framework</p>
-                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format:
-                        Reveal.js HTML • Scope: System Schematics</p>
+                    <!-- CAMBIA ESTE NOMBRE POR EL DE TU PROYECTO ACTUAL -->
+                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;"> CV de prueba
+                    </p>
+                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: HTML
+                        Framework • Scope: Interactive Slide Deck</p>
                 </div>
-                <a href="/slides/trading-framework/index.html"
-                    style="font-family: monospace; font-size: 12px; color: var(--color-orange); text-decoration: none; font-weight: 500;">RUN
-                    →</a>
+                <!-- REEMPLAZA "tu-archivo.html" POR LA RUTA DE TU DIAPOSITIVA REAL -->
+                <a href="slides/jc_cv.html" target="_blank"
+                    style="font-family: monospace; font-size: 12px; color: var(--color-orange); text-decoration: none; font-weight: 500;"
+                    onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='var(--color-orange)'">RUN →</a>
             </div>
 
         </div>
@@ -254,11 +255,11 @@
             © 2026 Jaime Claure Alvarez. Todos los derechos reservados.
         </div>
         <div style="display: flex; gap: 16px; align-items: center;">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+            <a href="https://github.com/Jaimeclaure" target="_blank" rel="noopener noreferrer"
                 style="color: #4B5563; text-decoration: none;" onmouseover="this.style.color='#9CA3AF'"
                 onmouseout="this.style.color='#4B5563'">GITHUB</a>
             <span>•</span>
-            <a href="https://medium.com" target="_blank" rel="noopener noreferrer"
+            <a href="https://medium.com/@jaimeclaure" target="_blank" rel="noopener noreferrer"
                 style="color: #4B5563; text-decoration: none;" onmouseover="this.style.color='#9CA3AF'"
                 onmouseout="this.style.color='#4B5563'">MEDIUM</a>
         </div>

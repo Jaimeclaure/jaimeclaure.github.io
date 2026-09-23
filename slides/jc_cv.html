@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jaime Antonio Claure Alvarez — Currículum Vitae</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0D10;
+    --surface:#14171B;
+    --surface-2:#0F1215;
+    --border:#242A30;
+    --ink:#ECE9E2;
+    --muted:#8B9199;
+    --muted-2:#5E656D;
+    --accent:#C9A66B;
+    --accent-soft:rgba(201,166,107,.14);
+    --eng:#8FB3C9;
+    --des:#C98F6B;
+    --max:920px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent-soft); color:var(--ink);}
+
+  a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--muted-2); transition:border-color .15s ease;}
+  a:hover{border-color:var(--accent);}
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 28px;}
+
+  /* ---------- top nav ---------- */
+  .topnav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(11,13,16,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .topnav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:16px; padding-bottom:16px;
+  }
+  .brand{
+    font-family:'Fraunces',serif; font-size:19px; font-style:italic; font-weight:500;
+    color:var(--ink); border:none;
+  }
+  .navlinks{display:flex; gap:26px; font-size:13.5px; color:var(--muted);}
+  .navlinks a{border:none; color:var(--muted);}
+  .navlinks a:hover{color:var(--ink);}
+  .print-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    background:transparent; color:var(--accent); border:1px solid var(--accent);
+    border-radius:3px; padding:7px 14px; cursor:pointer;
+  }
+  .print-btn:hover{background:var(--accent-soft);}
+  @media (max-width:680px){ .navlinks{display:none;} }
+
+  /* ---------- header ---------- */
+  header.hero{ padding:64px 0 40px; border-bottom:1px solid var(--border); }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em;
+    color:var(--muted-2); margin-bottom:18px;
+  }
+  h1.name{
+    font-family:'Fraunces',serif; font-weight:600; font-size:clamp(34px,5.5vw,52px);
+    line-height:1.05; margin:0 0 10px;
+  }
+  .title-line{
+    font-size:17px; color:var(--muted); max-width:560px; margin:0 0 28px;
+  }
+  .title-line b{color:var(--ink); font-weight:500;}
+
+  .contact-row{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:14px 24px; margin-top:8px;
+    border-top:1px solid var(--border); padding-top:22px;
+  }
+  .contact-item{font-size:13.5px;}
+  .contact-item .label{
+    display:block; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    color:var(--muted-2); margin-bottom:3px;
+  }
+  .contact-item a{border-bottom:1px solid var(--muted-2); font-size:13.5px;}
+
+  /* ---------- verification note ---------- */
+  .verify-box{
+    margin-top:28px;
+    border:1px solid var(--accent);
+    background:var(--accent-soft);
+    border-radius:4px;
+    padding:16px 20px;
+    font-size:13.5px;
+    color:var(--ink);
+  }
+  .verify-box .vtitle{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--accent);
+    margin-bottom:8px; display:block;
+  }
+  .verify-box ul{ margin:0; padding-left:18px; }
+  .verify-box li{ margin-bottom:4px; color:var(--muted); }
+  .verify-box li b{ color:var(--ink); font-weight:500; }
+
+  /* ---------- sections ---------- */
+  section{ padding:52px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{
+    display:flex; align-items:baseline; gap:16px; margin-bottom:28px;
+  }
+  h2.section-title{
+    font-family:'Fraunces',serif; font-weight:500; font-size:26px; margin:0;
+  }
+  .section-num{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted-2);
+  }
+
+  .summary p{ max-width:70ch; color:var(--ink); font-size:16.5px; }
+  .summary p + p{ margin-top:14px; }
+
+  /* ---------- competencies (two columns, always visible) ---------- */
+  .comp-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:1px;
+    background:var(--border); border:1px solid var(--border); border-radius:6px; overflow:hidden;
+  }
+  .comp-col{ background:var(--surface); padding:26px 28px; }
+  .comp-col h3{
+    font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:13px;
+    margin:0 0 16px; display:flex; align-items:center; gap:9px;
+  }
+  .dot{ width:8px; height:8px; border-radius:50%; display:inline-block; flex:none; }
+  .dot.eng{ background:var(--eng); }
+  .dot.des{ background:var(--des); }
+  .comp-col ul{ margin:0; padding:0; list-style:none; }
+  .comp-col li{
+    font-size:14.5px; color:var(--muted); padding:7px 0;
+    border-top:1px solid var(--border);
+  }
+  .comp-col li:first-of-type{ border-top:none; }
+  .comp-col li b{ color:var(--ink); font-weight:500; }
+  @media (max-width:680px){ .comp-grid{grid-template-columns:1fr;} }
+
+  /* ---------- timeline ---------- */
+  .timeline{ position:relative; }
+  .tl-item{
+    position:relative;
+    display:grid; grid-template-columns:120px 1fr; gap:28px;
+    padding-bottom:44px;
+  }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-years{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--muted);
+    padding-top:2px; text-align:right;
+  }
+  .tl-years .current{ color:var(--accent); }
+  .tl-line{
+    position:absolute; left:120px; top:8px; bottom:-44px; width:1px;
+    background:var(--border);
+    transform:translateX(6.5px);
+  }
+  .tl-item:last-child .tl-line{ display:none; }
+  .tl-dot{
+    position:absolute; left:120px; top:4px; width:9px; height:9px;
+    border-radius:50%; background:var(--bg); border:2px solid var(--accent);
+    transform:translateX(2.5px);
+  }
+  .tl-body h3{
+    font-family:'Fraunces',serif; font-weight:500; font-size:19px; margin:0 0 4px;
+  }
+  .tl-org{ font-size:13.5px; color:var(--muted); margin-bottom:12px; }
+  .tl-org .flag{ color:var(--accent); }
+  .tl-body ul{ margin:0; padding-left:18px; }
+  .tl-body li{ font-size:14.5px; color:var(--ink); opacity:.92; margin-bottom:6px; }
+  .tags{ margin-top:12px; display:flex; gap:7px; flex-wrap:wrap; }
+  .tag{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--muted);
+    border:1px solid var(--border); border-radius:20px; padding:3px 10px;
+  }
+  .tag.eng{ color:var(--eng); border-color:rgba(143,179,201,.35); }
+  .tag.des{ color:var(--des); border-color:rgba(201,143,107,.35); }
+  .tag.str{ color:var(--accent); border-color:rgba(201,166,107,.35); }
+
+  @media (max-width:680px){
+    .tl-item{ grid-template-columns:1fr; gap:8px; }
+    .tl-years{ text-align:left; }
+    .tl-line, .tl-dot{ display:none; }
+  }
+
+  /* ---------- education ---------- */
+  .edu-list, .cert-list{ list-style:none; margin:0; padding:0; }
+  .edu-item, .cert-item{
+    display:grid; grid-template-columns:1fr auto; gap:12px;
+    padding:16px 0; border-top:1px solid var(--border);
+  }
+  .edu-item:first-child, .cert-item:first-child{ border-top:none; }
+  .edu-main b{ font-weight:500; }
+  .edu-sub{ font-size:13.5px; color:var(--muted); margin-top:2px; }
+  .edu-year, .cert-year{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--muted); white-space:nowrap;
+  }
+  sup.fn{
+    color:var(--accent); cursor:help; margin-left:3px; font-size:12px;
+    border-bottom:1px dotted var(--accent);
+  }
+  .footnote-block{
+    margin-top:22px; padding-top:18px; border-top:1px dashed var(--border);
+    font-size:12.5px; color:var(--muted-2);
+  }
+  .footnote-block p{ margin:0 0 6px; }
+
+  .lang-line{ font-size:15px; color:var(--ink); margin-top:6px; }
+  .lang-line .muted{ color:var(--muted); }
+
+  /* ---------- footer ---------- */
+  footer{ padding:48px 0 64px; }
+  .foot-signature{
+    font-family:'Fraunces',serif; font-style:italic; font-size:18px; margin-bottom:8px;
+  }
+  .foot-tagline{ font-size:12.5px; color:var(--muted-2); letter-spacing:.01em; margin-bottom:22px; }
+  .foot-links{ display:flex; gap:20px; flex-wrap:wrap; font-size:13px; }
+  .foot-links a{ color:var(--muted); border:none; }
+  .foot-links a:hover{ color:var(--accent); }
+
+  @media print{
+    .topnav, .verify-box, .footnote-block{ display:none !important; }
+    body{ background:#fff; color:#111; }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <div class="wrap">
+      <span class="brand">Jaime Claure</span>
+      <div class="navlinks">
+        <a href="#resumen">Resumen</a>
+        <a href="#competencias">Competencias</a>
+        <a href="#trayectoria">Trayectoria</a>
+        <a href="#formacion">Formación</a>
+      </div>
+      <button class="print-btn" onclick="window.print()">Exportar / Imprimir</button>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow"> Currículum Vitae</div>
+      <h1 class="name">Jaime Antonio Claure Alvarez</h1>
+      <p class="title-line">
+        <b>Estratega de decisiones, para convertir ideas en resultados con innovación </b> — 
+        Con más de una década de experiencia, Jaime combina su perfil profesional híbrido, aprovechando su sólida formación en TICs para integrar y automatizar sistemas en experiencias del usuario, desempeña funciones como Estratega de
+        Transformación Digital, Diseño de Productos y especialista en DevOps. Su misión es diseñar con el objetivo de generar
+        engagement al desarrollar tecnología responsiva y reactiva para los usuarios, creando proyectos que conecten profundamente con el consumidor..
+      </p>
+
+      <div class="contact-row">
+        <div class="contact-item"><span class="label">Correo</span><a href="mailto:jaimeclaure@gmail.com">jaimeclaure@gmail.com</a></div>
+        <div class="contact-item"><span class="label">WhatsApp</span><span>+591 67806989</span></div>
+        <div class="contact-item"><span class="label">Ubicación</span><span>Santa Cruz de la Sierra, Bolivia&nbsp;↓</span></div>
+        <div class="contact-item"><span class="label">X</span><a href="https://www.x.com/jaibytes" target="_blank" rel="noopener">@jaibytes</a></div>
+        <div class="contact-item"><span class="label">LinkedIn</span><a href="https://www.linkedin.com/in/jaimeclaure/" target="_blank" rel="noopener">in/jaimeclaure</a></div>
+        <div class="contact-item"><span class="label">GitHub</span><a href="https://github.com/Jaimeclaure" target="_blank" rel="noopener">Jaime Claure</a></div>
+      </div>
+
+
+    <section id="resumen">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2 class="section-title">Resumen profesional</h2>
+      </div>
+      <div class="summary">
+        <p>Ingeniero de Sistemas y Estratega Digital: dos carreras que, en la práctica, hacen la misma pregunta desde extremos
+        opuestos, cómo lograr que la tecnología signifique algo para quien la usa.</p>
+        <p>Más de 13 años liderando transformación digital desde ambos lados de esa ecuación. Del lado de la ingeniería: Ciclo de Vida Completo del Desarrollo de Software, desarrollo Full-Stack, operaciones de producto, Machine Learning, Business Intelligence e integraciones cloud. Del lado de la estrategia: identidad corporativa, dirección creativa, comunicación visual, lanzamientos de producto y campañas omnicanal.</p>
+        <p>El punto de encuentro es el Diseño Basado en Datos (Data-Driven Design): creatividad de alto impacto que se valida con analítica, y arquitectura técnica que se diseña pensando en la experiencia de usuario (UI/UX) antes que en el diagrama. No diseño interfaces que la ingeniería después tiene que sostener, ni construyo sistemas que el diseño después tiene que disimular, las dos decisiones se toman en la misma mesa.</p>
+        <p>Historial comprobado en liderazgo de equipos multidisciplinarios y ejecución de soluciones escalables que maximizan el ROI. Actualmente cursando la Maestría en Ciencia de Datos, Machine Learning e Inteligencia Artificial.</p>
+      </div>
+    </section>
+
+    <section id="competencias">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Competencias</h2>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-col">
+          <h3><span class="dot eng"></span>Ingeniería &amp; Datos</h3>
+          <ul>
+            <li><b>Backend &amp; Ingeniería de Datos:</b> Python, Node.js, PostgreSQL, MongoDB, principios SOLID</li>
+            <li><b>Frontend:</b> React.js, Next.js, JavaScript (ES6+), HTML5/CSS3</li>
+            <li><b>Ciencia de datos:</b> Google Colab, Pandas, NumPy, Scikit-learn, XGBoost, PyTorch, TensorFlow</li>
+            <li><b>Inteligencia de Negocios &amp; Analítica:</b> ETL, KNIME Analytics, QGIS, Data-Driven, Dashboards de KPI en tiempo real,
+              Google Analytics API</li>
+            <li><b>Infraestructura &amp; MLOps:</b> Google Cloud Platform, Docker, CI/CD (Render, Vercel, Netlify, Cloudflare, AWS),
+              Linux (Debian/Fedora), Git/GitHub, HuggingFace</li>
+            <li><b>Metodologías:</b> Agile, Lean, Kanban, Scrum, DevOps-GitOps Culture</li>
+            <li><b>AI &amp; Generative Tech:</b> Integración de IA Generativa, Arquitectura RAG, LLMs (Gemini, Claude, DeepSeek, Kimi, Qwen) y automatización de flujos con Python.</li>
+
+          </ul>
+        </div>
+        <div class="comp-col">
+          <h3><span class="dot des"></span>Diseño &amp; Marca</h3>
+          <ul>
+            <li><b>Dirección de Arte:</b> Branding Estratégico, Identidad Visual Corporativa, Transmedia Storytelling</li>
+            <li><b>Diseño UI/UX:</b> Figma, Sistemas de Diseño (Design Systems), Wireframing, Arquitectura de la Información,
+              Mockups</li>
+            <li><b>Herramientas Creativas:</b> Adobe Creative Suite (Photoshop, Illustrator, InDesign, Premiere, After Effects,
+              Audition), Final Cut Pro, Capture One Pro, Maxon Cinema 4D</li>
+            <li><b>IA Generativa Visual:</b> Midjourney, Adobe Firefly, Stable Diffusion, Kling AI, Higgsfield, Leonardo AI,
+              Nano Banana</li>
+            <li><b>Marketing Digital &amp; Growth E-commerce:</b> Estrategias SEO/SEM (Meta &amp; Google Ads), Analítica Web (GA4, GTM),
+              Optimización de Conversión (CRO / Pruebas A/B), Embudos de Venta (KPIs, OKRs, CAC/LTV, ROAS), Marketing
+              Automation, Marketing de Guerrilla</li>
+            <li><b>Gestión &amp; Estrategia:</b> Liderazgo de Equipos Multidisciplinarios, Design Thinking, SCAMPER, CRM</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="trayectoria">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Trayectoria profesional</h2>
+      </div>
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-line"></div><div class="tl-dot"></div>
+          <div class="tl-years"><span class="current">2024 — presente</span></div>
+          <div class="tl-body">
+            <h3>Docente universitario adjunto</h3>
+            <div class="tl-org">Universidad Privada Domingo Savio (2026) · Universidad UCATEC (2025) · CCA (2024–2025)</div>
+            <ul>
+              <li>Docencia en programas y asignaturas de pregrado y posgrado.</li>
+            </ul>
+            <div class="tags"><span class="tag eng">Docencia</span><span class="tag str">Metodologías ágiles</span><span class="tag eng">Metodo Scamper</span></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-line"></div><div class="tl-dot"></div>
+          <div class="tl-years">2024 — 2026</div>
+          <div class="tl-body">
+            <h3>Coordinador de Proyectos Digitales &amp; Project Manager</h3>
+            <div class="tl-org">Vafercon Consultant Projects · Tarija, Bolivia</div>
+            <ul>
+              <li>Lideró la planificación y ejecución de proyectos digitales multidisciplinarios, cumpliendo cronogramas y presupuestos.</li>
+              <li>Diseñó e implementó sistemas de monitoreo en tiempo real, incrementando la eficiencia operativa en 40%.</li>
+              <li>Supervisó la estrategia de contenido en redes sociales, logrando un crecimiento en engagement de audiencia.</li>
+            </ul>
+            <div class="tags"><span class="tag eng">Sistemas de monitoreo</span><span class="tag str">Gestión de proyectos</span></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-line"></div><div class="tl-dot"></div>
+          <div class="tl-years">2018 — 2023</div>
+          <div class="tl-body">
+            <h3>Director de Estrategia Digital, Operaciones y Dirección Creativa</h3>
+            <div class="tl-org">Agua Digital · Santa Cruz de la Sierra, Bolivia</div>
+            <ul>
+              <li>Dirigió la arquitectura técnica y el desarrollo Full-Stack de soluciones web para más de 20 cuentas corporativas.</li>
+              <li>Diseñó pipelines de datos para Business Intelligence, integrando APIs de Google Analytics en dashboards de KPI en tiempo real.</li>
+              <li>Lideró la dirección creativa y la coherencia de marca de la cartera de clientes, elevando el engagement en redes sociales</li>
+              <li>Supervisó el diseño UI/UX de plataformas responsivas, mejorando la satisfacción del cliente (CSAT)</li>
+              <li>Implementó metodologías ágiles (Scrum) entre equipos de diseño e ingeniería, acelerando la velocidad de los sprints.</li>
+            </ul>
+            <div class="tags"><span class="tag eng">Full-Stack</span><span class="tag eng">Business Intelligence</span><span class="tag des">Dirección creativa</span><span class="tag des">UI/UX</span></div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-line"></div><div class="tl-dot"></div>
+          <div class="tl-years">2016 — 2018</div>
+          <div class="tl-body">
+            <h3>Encargado de Operaciones de Diseño y Desarrollo de Producto</h3>
+            <div class="tl-org">Faboce, Planta Industrial Líder Nacional de Cerámica y Porcelanato · Santa Cruz y Tarija, Bolivia</div>
+            <ul>
+              <li>Lideró la transformación digital del catálogo físico a diversas colecciones productos digitales relacionales estructuradas para más de 150 SKU en Credigit HD en para canales B2B y B2C.</li>
+              <li>Desarrolló scripts de análisis en Python para segmentación de mercado, contribuyendo a los departamentos de comercializacion y de marketing nacional con un crecimiento favorable en las metricas de ingresos.</li>
+              <li>En el desarrollo de productos se coordinó especificaciones técnicas y estándares de calidad (ISO/TÜV) acorde a objetivos
+              empresariales, con equipos tecnicos de los socios internacionales Esmalglass-Itaca, Keraben, Torrecid de Brasil y España.</li>
+              <li>Dirigió el diseño de experiencia de usuario para la presentación de producto al departamento de UDEPI, generando herramientas visuales de venta a los departamentos comerciales.</li>
+            </ul>
+            <div class="tags"><span class="tag eng">Bases de datos</span><span class="tag des">Diseño de producto</span>
+              <span class="tag eng">Análisis de Mercadeo</span></div>
+              <span class="tag eng">Diseño Industrial</span></div>
+            
+          </div>
+        </div>
+
+          <!-- ÍTEM: DDB Buenos Aires -->
+          <div class="tl-item">
+            <div class="tl-line"></div>
+            <div class="tl-dot"></div>
+            <div class="tl-years">2013 — 2015</div>
+            <div class="tl-body">
+              <h3>Estratega Digital &amp; Desarrollo de Producto</h3>
+              <div class="tl-org">DDB Buenos Aires — Buenos Aires, Argentina</div>
+              <ul>
+                <li>Lideró conceptos visuales en el equipo de Dirección Creativa para campañas publicitarias globales,
+                  incrementando el reconocimiento de marca.</li>
+                <li>Trabajó en la Unidad de Desarrollo de Producto implementando interfaces frontend interactivas con óptimo
+                  rendimiento y compatibilidad.</li>
+                <li>Colaboró estrechamente con el área de Estrategia Digital y Comportamiento del Consumidor para traducir Big Data en especificaciones funcionales y de negocio.</li>
+              </ul>
+              <div class="tags">
+                <span class="tag des">Big Data</span>
+                <span class="tag eng">Desarrollo de Producto</span>
+                <span class="tag eng">Estrategia Digital</span>
+                <span class="tag eng">Comportamiento del Consumidor</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- ÍTEM: Athos TBWA -->
+          <div class="tl-item">
+            <div class="tl-line"></div>
+            <div class="tl-dot"></div>
+            <div class="tl-years">2011 — 2013</div>
+            <div class="tl-body">
+              <h3>Diseño Visual &amp; Estrategia Digital</h3>
+              <div class="tl-org">Athos TBWA — Santa Cruz, Bolivia</div>
+              <ul>
+                <li>Estructuró propuestas dentro de la unidad de desarrollo de producto, articulando el diseño visual de
+                  interfaces con las necesidades del mercado local.</li>
+                <li>Actuó como puente técnico y creativo entre el equipo de diseño y los desarrolladores backend para garantizar
+                  la viabilidad de plataformas digitales.</li>
+                <li>Codiseñó campañas interactivas integrando flujos de trabajo con el equipo de dirección creativa y los
+                  objetivos de conversión de marca para clientes como Banco Mercantil SCZ, RED UNO, Azaleia, Tigo, Sofía.</li>
+              </ul>
+              <div class="tags">
+                <span class="tag des">Diseño Visual</span>
+                <span class="tag eng">Frontend</span>
+                <span class="tag eng">Dirección de Arte</span>
+                <span class="tag des">Campañas 360°</span>
+              </div>
+            </div>
+          </div>
+
+
+        <div class="tl-item">
+          <div class="tl-line"></div>
+          <div class="tl-dot"></div>
+          <div class="tl-years">2009 — 2010</div>
+          <div class="tl-body">
+            <h3>Coordinador de Infraestructura TI</h3>
+            <div class="tl-org">Siadi Construcción y Consultoría · Tarija, Bolivia</div>
+            <ul>
+              <li>Lideró la administración y despliegue de servidores Linux Fedora optimizando el
+                rendimiento de la red corporativa y los protocolos de seguridad.</li>
+              <li>Diseñó e implementó entornos virtualizados para el almacenamiento centralizado de planos y documentación
+                técnica, elevando la eficiencia operativa de los equipos de ingeniería en un 15%.</li>
+              <li>Estructuró políticas automatizadas de respaldos (backups) y planes de recuperación ante desastres para mitigar
+                riesgos de pérdida de datos críticos del negocio.</li>
+              <li>Coordinó el soporte técnico preventivo y correctivo para usuarios finales y estaciones de trabajo, reduciendo
+                los tiempos de inactividad tecnológica del personal.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag eng">Infraestructura TI</span>
+              <span class="tag eng">Linux Server</span>
+              <span class="tag des">Gestión de TI</span>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </section>
+
+    <section id="formacion">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Formación académica universitaria</h2>
+      </div>
+      <ul class="edu-list">
+        <li class="edu-item">
+          <div class="edu-main"><b>M.Sc. en Ciencia de Datos e Inteligencia Artificial Aplicada</b><div class="edu-sub">Universidad Católica Boliviana — en curso</div></div>
+          <div class="edu-year">Est. 2027</div>
+        </li>
+        <li class="edu-item">
+          <div class="edu-main"><b>Diplomado de Posgrado en Machine Learning y Deep Learning Aplicado</b><div class="edu-sub">Universidad Católica Boliviana</div></div>
+          <div class="edu-year">2026</div>
+        </li>
+                <li class="edu-item">
+                  <div class="edu-main"><b>Diplomado de Posgrado en Business Intelligence y Ciencia de Datos</b>
+                    <div class="edu-sub">Universidad Católica Boliviana</div>
+                  </div>
+                  <div class="edu-year">2025</div>
+                </li>
+        <li class="edu-item">
+          <div class="edu-main"><b>Diplomado de Posgrado en Educación Superior</b><div class="edu-sub">Universidad Católica Boliviana</div></div>
+          <div class="edu-year">2023</div>
+        </li>
+
+        <li class="edu-item">
+          <div class="edu-main"><b>Diplomado de Posgrado en Marketing Digital</b><div class="edu-sub">NCFE Shaw Academy, University of Edinburgh</div></div>
+          <div class="edu-year">2015</div>
+        </li>
+              <li class="edu-item">
+                <div class="edu-main"><b>Diplomado de Posgrado en Fotografía Profesional</b>
+                  <div class="edu-sub">Universidad Evangélica Boliviana</div>
+                </div>
+                <div class="edu-year">2012</div>
+              </li>
+        <li class="edu-item">
+          <div class="edu-main"><b>Licenciatura en Diseño Gráfico Publicitario<sup class="fn" title="La mitad de tus documentos indica 2011 en lugar de 2013. Verificar antes de publicar.">†</sup></b><div class="edu-sub">Universidad Privada de Santa Cruz de la Sierra</div></div>
+          <div class="edu-year">2013</div>
+        </li>
+        <li class="edu-item">
+          <div class="edu-main"><b>Licenciatura en Ingeniería de Sistemas<sup class="fn"
+                title="Un documento fuente indica Universidad Católica Boliviana, 2007. Verificar antes de publicar.">†</sup></b>
+            <div class="edu-sub">Universidad Católica Boliviana - Universidad Privada Cumbre</div>
+          </div>
+          <div class="edu-year">2007</div>
+        </li>
+      </ul>
+
+
+      <div style="height:36px"></div>
+
+      <ul class="cert-list">
+        <li class="cert-item">
+          <div class="edu-main"><b>Google Professional Certificate — Digital Marketing &amp; E-Commerce</b></div>
+          <div class="cert-year">2026</div>
+        </li>
+        <li class="cert-item">
+          <div class="edu-main"><b>Adobe Professional Certificate — Graphic Design Expertise</b></div>
+          <div class="cert-year">2026</div>
+        </li>
+        <li class="cert-item">
+          <div class="edu-main"><b>Google Professional Certificate — UI/UX Design Foundations</b></div>
+          <div class="cert-year">2025</div>
+        </li>
+        <li class="cert-item">
+          <div class="edu-main"><b>KNIME Analytics Platform Practitioner Certification</b><div class="edu-sub">Credly</div></div>
+          <div class="cert-year">2025</div>
+        </li>
+        <li class="cert-item">
+          <div class="edu-main"><b>Project Management Specialization</b><div class="edu-sub">University of California, Irvine</div></div>
+          <div class="cert-year">2025</div>
+        </li>
+              <li class="cert-item">
+                <div class="edu-main"><b>Certificación en Gerencia, liderazgo y calidad</b>
+                  <div class="edu-sub">Universidad Privada de Santa Cruz de la Sierra - UPSA</div>
+                </div>
+                <div class="cert-year">2008</div>
+              </li>
+      </ul>
+
+      <p class="lang-line"><span class="muted">Idiomas —</span> Español (nativo) &nbsp;·&nbsp; Inglés, EF SET <span class="muted">B2-C1</span></p>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-signature">Jaime Claure</div>
+      <div class="foot-tagline">Focus, commitment &amp; sheer will. Man over Machine.</div>
+      <div class="foot-links">
+        <a href="https://www.jaimeclaure.com" target="_blank" rel="noopener">Portafolio</a>
+        <a href="https://www.linkedin.com/in/jaimeclaure/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/JaimeClaure" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://medium.com/@jaimeclaure" target="_blank" rel="noopener">Medium</a>
+        <a href="https://x.com/jaibytes" target="_blank" rel="noopener">X</a>
+        <a href="https://www.instagram.com/jaibytes" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
