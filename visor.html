@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Viewer // Jaime Claure</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Mozilla PDF.js Core y Worker oficiales -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <style>
+    :root {
+      --bg-sidebar: #1E2228;
+      --border-sidebar: #2D333B;
+      --text-sidebar: #ADB5BD;
+      --active-cyan: #06B6D4;
+      --bg-viewport: #374151;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-viewport);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .app-layout {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* 1. BARRA LATERAL CON ÍNDICE DE CAPÍTULOS */
+    .sidebar {
+      width: 310px;
+      min-width: 310px;
+      height: 100vh;
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border-sidebar);
+      overflow-y: auto;
+      padding: 20px 0 40px;
+      font-size: 13px;
+      color: var(--text-sidebar);
+      flex-shrink: 0;
+    }
+
+    .sidebar-header {
+      padding: 0 20px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: #6C757D;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-sidebar);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc-list {
+      list-style: none;
+    }
+
+    .toc-item a {
+      display: block;
+      padding: 8px 20px;
+      color: var(--text-sidebar);
+      text-decoration: none;
+      line-height: 1.4;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+
+    .toc-item a:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .toc-item.active a {
+      color: var(--active-cyan);
+      font-weight: 500;
+      border-left: 3px solid var(--active-cyan);
+      background: rgba(6, 182, 212, 0.08);
+    }
+
+    /* 2. ÁREA DE LECTURA (CANVAS PROTEGIDO) */
+    .viewport {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background-color: var(--bg-viewport);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px 80px;
+      scroll-behavior: smooth;
+    }
+
+    #pages-container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-width: 900px;
+      width: 100%;
+      align-items: center;
+    }
+
+    .page-wrapper {
+      position: relative;
+      background: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      border-radius: 2px;
+      line-height: 0;
+    }
+
+    canvas {
+      display: block;
+      max-width: 100%;
+      height: auto !important;
+    }
+
+    .loading-notice {
+      color: #9CA3AF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      margin-top: 100px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #4B5563;
+      border-radius: 4px;
+    }
+
+    .viewport::-webkit-scrollbar-thumb {
+      background: #6B7280;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .viewport {
+        padding: 12px 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app-layout">
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <span>// CONTENIDO</span>
+        <span id="page-stat" style="color: var(--active-cyan); font-size: 10px;">CARGANDO...</span>
+      </div>
+      <ul id="toc-list" class="toc-list"></ul>
+    </nav>
+
+    <main id="viewport" class="viewport">
+      <div id="loading" class="loading-notice">// Procesando páginas del documento...</div>
+      <div id="pages-container"></div>
+    </main>
+  </div>
+
+  <script>
+    // 1. Mitigación de menú contextual y atajos de guardado
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && ['s', 'p', 'u'].includes(e.key.toLowerCase())) e.preventDefault();
+      if (e.key === 'F12' || ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase()))) e.preventDefault();
+    });
+
+    // 2. NUEVA REGLA: Lee docs.pdf dentro de docs/
+    const PDF_PATH = 'docs/docs.pdf';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const pagesContainer = document.getElementById('pages-container');
+    const tocList = document.getElementById('toc-list');
+    const loading = document.getElementById('loading');
+    const pageStat = document.getElementById('page-stat');
+    const viewport = document.getElementById('viewport');
+
+    async function loadPDF() {
+      try {
+        const loadingTask = pdfjsLib.getDocument(PDF_PATH);
+        const pdf = await loadingTask.promise;
+
+        loading.style.display = 'none';
+        pageStat.textContent = `${pdf.numPages} PÁGS`;
+
+        for (let num = 1; num <= pdf.numPages; num++) {
+          const page = await pdf.getPage(num);
+          const scale = 1.8;
+          const pageViewport = page.getViewport({ scale });
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'page-wrapper';
+          wrapper.id = `page-${num}`;
+
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = pageViewport.height;
+          canvas.width = pageViewport.width;
+
+          wrapper.appendChild(canvas);
+          pagesContainer.appendChild(wrapper);
+
+          await page.render({ canvasContext: context, viewport: pageViewport }).promise;
+        }
+
+        const outline = await pdf.getOutline();
+        buildNavigation(outline, pdf.numPages, pdf);
+        initScrollSync(pdf.numPages);
+
+      } catch (err) {
+        loading.textContent = `// Error: Asegúrese de guardar el archivo como [docs.pdf] dentro de la carpeta /docs/`;
+        console.error(err);
+      }
+    }
+
+    function buildNavigation(outline, totalPages, pdf) {
+      if (outline && outline.length > 0) {
+        outline.forEach(item => {
+          const li = document.createElement('li');
+          li.className = 'toc-item';
+          const a = document.createElement('a');
+          a.textContent = item.title;
+
+          a.addEventListener('click', async () => {
+            if (typeof item.dest === 'string') {
+              const destIndex = await pdf.getDestination(item.dest);
+              const pageNum = await pdf.getPageIndex(destIndex[0]) + 1;
+              scrollToPage(pageNum);
+            } else if (Array.isArray(item.dest)) {
+              const pageNum = await pdf.getPageIndex(item.dest[0]) + 1;
+              scrollToPage(pageNum);
+            }
+          });
+
+          li.appendChild(a);
+          tocList.appendChild(li);
+        });
+      } else {
+        for (let i = 1; i <= totalPages; i++) {
+          const li = document.createElement('li');
+          li.className = 'toc-item';
+          if (i === 1) li.classList.add('active');
+          const a = document.createElement('a');
+          a.textContent = `Página ${i}`;
+          a.addEventListener('click', () => scrollToPage(i));
+          li.appendChild(a);
+          tocList.appendChild(li);
+        }
+      }
+    }
+
+    function scrollToPage(num) {
+      const target = document.getElementById(`page-${num}`);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function initScrollSync(totalPages) {
+      viewport.addEventListener('scroll', () => {
+        const viewportTop = viewport.scrollTop;
+        let currentPage = 1;
+
+        for (let i = 1; i <= totalPages; i++) {
+          const el = document.getElementById(`page-${i}`);
+          if (el && (el.offsetTop - viewport.offsetTop) <= viewportTop + 150) {
+            currentPage = i;
+          }
+        }
+
+        const items = document.querySelectorAll('.toc-item');
+        items.forEach((item, idx) => {
+          item.classList.remove('active');
+          if (idx === currentPage - 1) item.classList.add('active');
+        });
+      });
+    }
+
+    loadPDF();
+  </script>
+</body>
+
+</html>

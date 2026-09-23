@@ -146,15 +146,15 @@
                     style="font-family: monospace; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-cyan); display: flex; align-items: center; gap: 8px;">
                     <span class="led-pulse"></span> jaimeclaure.github.io // active_node
                 </span>
-                <h1 class="font-serif" style="font-size: 2.25rem; color: #F9FAFB; margin-top: 8px;">Assets &amp;
-                    Document Server</h1>
+                <h1 class="font-serif" style="font-size: 2.25rem; color: #F9FAFB; margin-top: 8px;">assets server</h1>
             </div>
             <div>
-                <a href="https://jaimeclaure.com" target="_blank" rel="noopener noreferrer"
+                <!-- Enlace blindado a www.jaimeclaure.com/ -->
+                <a href="https://www.jaimeclaure.com/" target="_blank" rel="external noopener noreferrer"
                     style="font-family: monospace; font-size: 12px; border: 1px solid #374151; padding: 8px 16px; border-radius: 2px; transition: all 0.3s; color: var(--text-muted); text-decoration: none;"
                     onmouseover="this.style.borderColor='var(--color-orange)'; this.style.color='#FFF'"
                     onmouseout="this.style.borderColor='#374151'; this.style.color='var(--text-muted)'">
-                    MAIN PORTFOLIO ↗
+                    PAGINA PRINCIPAL ↗
                 </a>
             </div>
         </div>
@@ -167,8 +167,8 @@
                 Terminal de Archivos
             </h2>
             <p style="font-size: 14px; color: #9CA3AF; line-height: 1.6;">
-                Infraestructura estática dedicada al almacenamiento seguro, distribución y renderizado automatizado de
-                documentación de software, papers científicos e informes de arquitectura de datos.
+                Infraestructura dedicada al almacenamiento seguro, distribución y renderizado automatizado de
+                documentación, papers científicos, informes y presentaciones.
             </p>
             <div
                 style="background-color: rgba(11, 15, 25, 0.6); border: 1px solid var(--border-dark); padding: 16px; border-radius: 2px; font-family: monospace; font-size: 11px; color: #4B5563; line-height: 1.5;">
@@ -181,35 +181,45 @@
         <div class="col-right" style="display: flex; flex-direction: column; gap: 16px;">
             <h2
                 style="font-family: monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-bottom: 8px;">
-                Índice de Documentos e Investigaciones
+                Índice de Documentos, Investigaciones y Presentaciones
             </h2>
 
-            <!-- ÍTEM 1: Abre el visor con PDF.js + Menú lateral de marcadores e impide descarga -->
+            <!-- ÍTEM 1: Abre visor.html (que lee docs/doc.pdf de forma protegida) -->
             <div class="card-node">
                 <div>
-                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Scientific Paper // Defense Research
-                    </p>
-                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: PDF.js
-                        Indexed Viewer • Target: mod10_defensa</p>
+                    <p style="font-size: 18px; font-weight: 500; color: #F3F4F6;">Documento</p>
+                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format:
+                        PDF protected  and scope academic paper</p>
                 </div>
-                <a href="Paper_JaimeClaure_001.html" target="_blank"
+                <a href="visor.html" target="_blank"
                     style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;"
                     onmouseover="this.style.color='var(--color-orange)'"
-                    onmouseout="this.style.color='var(--color-cyan)'">VIEW →</a>
+                    onmouseout="this.style.color='var(--color-cyan)'">LEER →</a>
             </div>
 
-            <!-- ÍTEM 2: Abre la presentación contenida en Reveal.js (jc_cv.html con Hash router) -->
+            <!-- ÍTEM 2: Abre la carpeta slides/ (que ejecuta Reveal.js y monta deck.html) -->
             <div class="card-node">
                 <div>
-                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Executive Portfolio // Presentation
-                        Deck</p>
-                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format:
-                        Reveal.js Contained Deck • Target: jc_cv</p>
+                    <p style="font-size: 18px; font-weight: 500; color: #F3F4F6;">Presentación</p>
+                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Academic slides presentation revealer</p>
                 </div>
-                <a href="slides/jc_cv.html" target="_blank"
+                <a id="btn-slides" href="slides/" target="_blank"
                     style="font-family: monospace; font-size: 12px; color: var(--color-orange); text-decoration: none; font-weight: 500;"
-                    onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='var(--color-orange)'">RUN →</a>
+                    onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='var(--color-orange)'">PRESENTAR →</a>
             </div>
+
+                <!-- ÍTEM 2: Abre la carpeta slides/ (que ejecuta Reveal.js y monta deck.html) -->
+                <div class="card-node">
+                    <div>
+                        <p style="font-size: 18px; font-weight: 500; color: #F3F4F6;">Repositorio</p>
+                        <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Academic slides
+                            presentation revealer</p>
+                    </div>
+                    <a id="btn-slides" href="PONER_URL" target="_blank"
+                        style="font-family: monospace; font-size: 12px; color: var(--color-white); text-decoration: none; font-weight: 500;"
+                        onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='var(--color-white)'">VER →</a>
+                </div>
+
 
         </div>
     </main>
@@ -227,9 +237,19 @@
             <a href="https://medium.com/@jaimeclaure" target="_blank" rel="noopener noreferrer"
                 style="color: #4B5563; text-decoration: none;" onmouseover="this.style.color='#9CA3AF'"
                 onmouseout="this.style.color='#4B5563'">MEDIUM</a>
+            <span>•</span>
+            <a href="https://x.com/jaibytes" target="_blank" rel="noopener noreferrer"
+                    style="color: #4B5563; text-decoration: none;" onmouseover="this.style.color='#9CA3AF'"
+                    onmouseout="this.style.color='#4B5563'">X</a>
         </div>
     </footer>
 
+    <!-- Detección automática para Live Server y doble clic local -->
+    <script>
+        if (window.location.protocol === 'file:') {
+            document.getElementById('btn-slides').setAttribute('href', 'slides/index.html');
+        }
+    </script>
 </body>
 
 </html>

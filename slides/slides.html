@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Detección Anticipada de Incendios - Chiquitanía</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+              900: '#881337'
+            },
+            cumbre: {
+              blue: '#0284c7',
+              navy: '#0f172a',
+              amber: '#f59e0b',
+              emerald: '#10b981'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .glass-light {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .slide {
+      display: none;
+      opacity: 0;
+      transform: translateY(12px) scale(0.99);
+      transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+    }
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    /* Custom scrollbar for drawer */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e11d48;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans h-full overflow-hidden flex flex-col justify-between select-none">
+
+  <header class="w-full z-40 bg-slate-900/80 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between shrink-0">
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center shadow-lg shadow-rose-950/50">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-sm font-semibold tracking-wide text-slate-200 uppercase font-display">RADAGAST CHIQUITANÍA</h1>
+        <p class="text-xs text-rose-400 font-medium">UPC • Perfil de Trabajo de Grado</p>
+      </div>
+    </div>
+
+    <!-- Center progress counter -->
+    <div class="flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60 shadow-inner">
+      <span class="text-xs font-bold text-rose-400 font-mono" id="currentSlideDisplay">01</span>
+      <span class="text-xs text-slate-500">/</span>
+      <span class="text-xs font-semibold text-slate-400 font-mono" id="totalSlidesDisplay">25</span>
+    </div>
+
+    <!-- Quick action buttons -->
+    <div class="flex items-center space-x-2">
+      <button onclick="toggleOverview()" title="Ver índice de diapositivas" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
+      </button>
+      <button onclick="toggleFullScreen()" title="Pantalla completa" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0 0l-5-5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress bar -->
+  <div class="w-full bg-slate-800 h-1 relative overflow-hidden">
+    <div id="progressBar" class="h-full bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-400 transition-all duration-300" style="width: 4%;"></div>
+  </div>
+
+  <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex items-center justify-center relative overflow-hidden">
+
+    <!-- SLIDE 1: Portada Institucional -->
+    <section class="slide active flex-col justify-center items-center text-center max-w-4xl w-full h-full p-6 sm:p-12 glass-card rounded-3xl shadow-2xl relative" data-title="Portada Institucional">
+      <div class="absolute -top-16 -left-16 w-64 h-64 bg-rose-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -right-16 w-64 h-64 bg-sky-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold mb-6">
+        <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+        <span>DEFENSA DE PERFIL DE INVESTIGACIÓN</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight font-display text-white mb-4 leading-tight">
+        Sistema de detección anticipada de incendios forestales mediante redes neuronales convolucionales multiespectrales en la Chiquitanía
+      </h1>
+
+      <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-8 font-light">
+        Integración de tensores ópticos Sentinel-2, dinámica eólica ERA5-Land y redes móviles comunitarias en el departamento de Santa Cruz.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl text-left pt-6 border-t border-slate-800">
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <p class="text-xs text-slate-400 uppercase font-semibold">Postulante</p>
+          <p class="text-sm font-bold text-slate-200">Jaime Antonio Claure Álvarez</p>
+        </div>
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <p class="text-xs text-slate-400 uppercase font-semibold">Docente Tutor</p>
+          <p class="text-sm font-bold text-slate-200">Lic. Hernando Chávez Hurtado</p>
+        </div>
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <p class="text-xs text-slate-400 uppercase font-semibold">Institución</p>
+          <p class="text-sm font-bold text-slate-200">Universidad Privada Cumbre</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Contexto Regional Chiquitano -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Contexto Regional Chiquitano">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-amber-500/20 text-amber-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Ecorregión de la Chiquitanía y Vulnerabilidad</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div class="space-y-4 text-slate-300 text-sm leading-relaxed">
+          <p>
+            El departamento de Santa Cruz alberga el <strong>Bosque Seco Chiquitano</strong>, uno de los bosques secos tropicales continuos más extensos y biodiversos del planeta, conectado directamente con el Pantanal y la cuenca amazónica.
+          </p>
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+            <h3 class="text-rose-400 font-semibold text-xs tracking-wider uppercase">Ciclo de Estiaje Crítico</h3>
+            <p class="text-xs text-slate-400">
+              Entre <strong>agosto y octubre</strong> convergen precipitaciones casi nulas, temperaturas extremas (>35°C), baja humedad relativa y vientos del norte que resecan rápidamente el combustible foliar.
+            </p>
+          </div>
+          <p>
+            El fuego no solo arrasa flora y fauna endémica, sino que genera densas cortinas de humo que viajan cientos de kilómetros, paralizando actividades y disparando los niveles de contaminación del aire en la metrópoli cruceña.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/60">
+            <span class="text-3xl font-extrabold text-amber-400 font-display">20+ Mill.</span>
+            <p class="text-xs text-slate-400 mt-1 font-medium">Hectáreas de bosque seco y sabanas en peligro latente</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/60">
+            <span class="text-3xl font-extrabold text-rose-500 font-display">6 Meses</span>
+            <p class="text-xs text-slate-400 mt-1 font-medium">Ventana crítica de sequía y déficit de recarga hídrica</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/60 col-span-2">
+            <p class="text-xs text-emerald-400 font-bold uppercase tracking-wider">Impacto Metropolitano</p>
+            <p class="text-xs text-slate-300 mt-1">
+              Contaminación severa con PM2.5 en Santa Cruz de la Sierra: suspensión de clases escolares, emergencias respiratorias y vuelos cancelados en Viru Viru.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Antecedentes y Récord 2024 -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Récord Histórico 2024">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-rose-500/20 text-rose-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">2024: El Máximo Histórico de Quemas</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-1 p-6 rounded-2xl bg-rose-950/40 border border-rose-800/40 flex flex-col justify-between">
+          <div>
+            <span class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 text-xs font-bold uppercase">Estudio 2026 (Landsat)</span>
+            <h3 class="text-4xl font-extrabold text-white font-display mt-4">1985-2024</h3>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              La serie histórica multidecadal confirmó que el 2024 superó todas las marcas previas registradas en Santa Cruz desde el inicio de las mediciones satelitales.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-rose-800/40 text-xs text-rose-400 font-mono font-semibold">
+            Fuente: Revista Ecología en Bolivia (2026)
+          </div>
+        </div>
+
+        <div class="md:col-span-2 space-y-4">
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-start space-x-4">
+            <div class="p-2 rounded-lg bg-amber-500/20 text-amber-400 font-bold shrink-0">01</div>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Colapso del Bosque Primario</h4>
+              <p class="text-xs text-slate-400 mt-1">El fuego penetró en masas boscosas densas que antes eran resistentes, destruyendo árboles milenarios de maderas duras y reservorios biológicos.</p>
+            </div>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-start space-x-4">
+            <div class="p-2 rounded-lg bg-rose-500/20 text-rose-400 font-bold shrink-0">02</div>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Rebasamiento de la Capacidad de Respuesta</h4>
+              <p class="text-xs text-slate-400 mt-1">Las brigadas de bomberos y los apoyos aéreos no lograron contener los frentes de fuego activos simultáneos que superaron los 80 km de extensión continua.</p>
+            </div>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-start space-x-4">
+            <div class="p-2 rounded-lg bg-sky-500/20 text-sky-400 font-bold shrink-0">03</div>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Evidencia Cartográfica Incontrastable</h4>
+              <p class="text-xs text-slate-400 mt-1">La Fundación TIERRA documentó cicatrices continuas que demandan el reemplazo urgente de alertas pasivas por modelos anticipados de riesgo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Municipios con Mayor Afectación 2024 -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Zonas Prioritarias Chiquitanía">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-rose-600/20 text-rose-500">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Superficie Quemada por Municipios (2024)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <!-- Item 1 -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <p class="text-sm font-bold text-white">Concepción</p>
+              <span class="text-xs text-rose-400 font-semibold">Prioridad Muy Alta</span>
+            </div>
+            <span class="text-sm font-mono font-bold text-slate-200">2.040.000 ha</span>
+          </div>
+          <!-- Item 2 -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <p class="text-sm font-bold text-white">San Matías</p>
+              <span class="text-xs text-rose-400 font-semibold">Prioridad Muy Alta</span>
+            </div>
+            <span class="text-sm font-mono font-bold text-slate-200">2.008.000 ha</span>
+          </div>
+          <!-- Item 3 -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <p class="text-sm font-bold text-white">San Ignacio de Velasco</p>
+              <span class="text-xs text-rose-400 font-semibold">Prioridad Muy Alta</span>
+            </div>
+            <span class="text-sm font-mono font-bold text-slate-200">1.525.000 ha</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Item 4 -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <p class="text-sm font-bold text-white">Urubichá</p>
+              <span class="text-xs text-amber-400 font-semibold">Prioridad Alta</span>
+            </div>
+            <span class="text-sm font-mono font-bold text-slate-200">699.000 ha</span>
+          </div>
+          <!-- Item 5 -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <p class="text-sm font-bold text-white">San Rafael de Velasco</p>
+              <span class="text-xs text-amber-400 font-semibold">Prioridad Alta</span>
+            </div>
+            <span class="text-sm font-mono font-bold text-slate-200">482.000 ha</span>
+          </div>
+          <!-- Item 6 -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <p class="text-sm font-bold text-white">Ascensión de Guarayos</p>
+              <span class="text-xs text-amber-400 font-semibold">Prioridad Alta</span>
+            </div>
+            <span class="text-sm font-mono font-bold text-slate-200">447.000 ha</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 text-center font-medium">
+        Total consolidado superior a los 7.2 millones de hectáreas en estos 6 municipios centrales. Justifica la focalización espacial del modelo predictivo.
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Caso Monte Verde -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Caso Monte Verde (APCOB)">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Territorio Indígena Monte Verde (TCO)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Informe Oficial APCOB 2024</span>
+            <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-xs font-mono font-bold">71% Calcinado</span>
+          </div>
+
+          <div class="space-y-2">
+            <p class="text-3xl font-extrabold text-white font-display">672.483,62 ha</p>
+            <p class="text-xs text-slate-400">Afectación territorial directa sobre el hábitat ancestral chiquitano.</p>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800 space-y-2 text-xs text-slate-300">
+            <p>• Abarcó también territorios de <strong>Lomerío y Zapocó</strong>.</p>
+            <p>• Destrucción de sistemas agroforestales comunitarios y fuentes de agua.</p>
+            <p>• Pérdida irreparable de fauna y plantas medicinales nativas.</p>
+          </div>
+        </div>
+
+        <div class="space-y-4 text-sm text-slate-300">
+          <h3 class="text-base font-bold text-white">Relevancia para la Investigación:</h3>
+          <p class="text-xs leading-relaxed text-slate-400">
+            Monte Verde cuenta con cartografía validada de ubicación y severidad del fuego (dNBR). Esto proporciona la base empírica ideal para el levantamiento de polígonos de triangulación perimetral (Puntos A, B, C, D) requeridos para calibrar la red neuronal.
+          </p>
+          <div class="p-4 rounded-xl bg-slate-900 border border-emerald-500/30">
+            <p class="text-xs text-emerald-400 font-semibold">Integración Comunitaria</p>
+            <p class="text-xs text-slate-400 mt-1">Los guardaparques comunales y brigadas indígenas serán los principales usuarios de las alertas de riesgo preventivo en sus teléfonos móviles.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Formulación L-Q-P -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Planteamiento L-Q-P">
+      <div class="text-center max-w-2xl mx-auto mb-8">
+        <span class="text-xs font-bold text-rose-400 uppercase tracking-widest">Estructuración Metodológica UPC</span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white mt-1">Matriz de Formulación: L - Q - P</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- L: Lugar -->
+        <div class="p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold font-display mb-4">L</div>
+            <h3 class="text-lg font-bold text-white mb-2">Lugar</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Ecorregión de la Chiquitanía (municipios de Concepción, San Matías, San Ignacio, Urubichá) y áreas periurbanas de Santa Cruz de la Sierra.
+            </p>
+          </div>
+          <span class="text-[11px] text-blue-400 font-medium mt-4">Espacio Geográfico e Institucional</span>
+        </div>
+
+        <!-- Q: Quienes -->
+        <div class="p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold font-display mb-4">Q</div>
+            <h3 class="text-lg font-bold text-white mb-2">Quiénes</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Comunidades indígenas (TCO Monte Verde/Lomerío), Unidades de Gestión de Riesgo (UGR), cuerpos de bomberos y población urbana afectada por humo.
+            </p>
+          </div>
+          <span class="text-[11px] text-emerald-400 font-medium mt-4">Beneficiarios y Actores Clave</span>
+        </div>
+
+        <!-- P: Problema -->
+        <div class="p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold font-display mb-4">P</div>
+            <h3 class="text-lg font-bold text-white mb-2">Problema</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Monitoreo reactivo y tardío basado en focos térmicos que detectan el fuego solo tras la ignición, sin modelar el estrés hídrico previo ni el viento.
+            </p>
+          </div>
+          <span class="text-[11px] text-rose-400 font-medium mt-4">Fenómeno a Resolver</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Pregunta de Investigación e Hipótesis -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Pregunta e Hipótesis">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-sky-500/20 text-sky-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Interrogante Científica e Hipótesis</h2>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Pregunta -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border-l-4 border-rose-500 shadow-lg">
+          <p class="text-xs font-bold text-rose-400 uppercase tracking-wider mb-1">Pregunta Central de Investigación</p>
+          <p class="text-sm sm:text-base text-slate-200 italic font-medium leading-relaxed">
+            "¿En qué medida el diseño y entrenamiento de una red neuronal convolucional profunda con arquitectura de fusión temprana (Early Fusion) sobre tensores multiespectrales de Sentinel-2 L2A y variables eólicas de ERA5-Land permite clasificar y anticipar los niveles de riesgo de incendios en zonas críticas de la Chiquitanía cruceña?"
+          </p>
+        </div>
+
+        <!-- Hipótesis -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border-l-4 border-emerald-500 shadow-lg">
+          <p class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">Hipótesis de Trabajo (Hi)</p>
+          <p class="text-sm sm:text-base text-slate-200 leading-relaxed">
+            La implementación de una red neuronal convolucional (EarlyFusionFireNet) sobre tensores multimodales de 12 canales permite predecir la susceptibilidad territorial de ignición en la Chiquitanía con un <strong>F1-Score superior al 85%</strong> y una <strong>sensibilidad (Recall) superior al 95% en la clase Extremo</strong>, superando los límites reactivos de la teledetección pasiva.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div class="p-3 bg-slate-800/60 rounded-xl border border-slate-700/60">
+            <span class="text-slate-400 uppercase font-semibold">Variable Independiente (X):</span>
+            <p class="text-slate-200 mt-1 font-mono">Tensores de 12 canales (6 bandas ópticas + 3 índices foliares + 3 componentes de viento ERA5).</p>
+          </div>
+          <div class="p-3 bg-slate-800/60 rounded-xl border border-slate-700/60">
+            <span class="text-slate-400 uppercase font-semibold">Variable Dependiente (Y):</span>
+            <p class="text-slate-200 mt-1 font-mono">Nivel de riesgo clasificado en 4 clases: Bajo (0), Medio (1), Alto (2) y Extremo (3).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Justificación Cuádruple UPC -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Justificación Institucional">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-indigo-500/20 text-indigo-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Justificación Cuádruple (Normativa UPC)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div class="flex items-center space-x-2 text-rose-400 mb-2">
+            <span class="text-sm font-bold uppercase tracking-wider font-display">1. Justificación Social</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Protege vidas y medios de subsistencia en comunidades indígenas chiquitanas; mitiga las crisis ambientales y sanitarias causadas por humaredas en Santa Cruz de la Sierra.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div class="flex items-center space-x-2 text-blue-400 mb-2">
+            <span class="text-sm font-bold uppercase tracking-wider font-display">2. Justificación Teórica</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Aporta a la ciencia computacional al adaptar modelos profundos para procesar tensores multiespectrales de 12 canales, superando el enfoque convencional limitado a canales RGB.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div class="flex items-center space-x-2 text-emerald-400 mb-2">
+            <span class="text-sm font-bold uppercase tracking-wider font-display">3. Justificación Metodológica</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Modela un flujo replicable: extracción en Google Earth Engine, entrenamiento en PyTorch con regularización numérica y despliegue cartográfico vectorial en QGIS.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+          <div class="flex items-center space-x-2 text-amber-400 mb-2">
+            <span class="text-sm font-bold uppercase tracking-wider font-display">4. Justificación Profesional</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Aplica herramientas avanzadas de ingeniería de software e inteligencia artificial geoespacial para resolver un desafío ambiental urgente del departamento.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Objetivos de la Investigación -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Objetivos General y Específicos">
+      <div class="flex items-center space-x-3 mb-4">
+        <span class="p-2 rounded-xl bg-rose-500/20 text-rose-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Objetivos del Proyecto</h2>
+      </div>
+
+      <!-- General -->
+      <div class="p-4 rounded-2xl bg-slate-900/90 border border-rose-500/40 mb-4">
+        <p class="text-xs font-bold text-rose-400 uppercase tracking-widest">Objetivo General</p>
+        <p class="text-xs sm:text-sm text-slate-200 mt-1 leading-relaxed">
+          <strong>Desarrollar</strong> un sistema de alerta temprana de incendios forestales para áreas prioritarias de la Chiquitanía mediante el modelado y clasificación de tensores multiespectrales (Sentinel-2) y dinámicas eólicas (ERA5-Land) de 12 canales utilizando una red neuronal convolucional profunda (EarlyFusionFireNet) e integración cartográfica SIG.
+        </p>
+      </div>
+
+      <!-- Específicos -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <span class="text-amber-400 font-bold">1. Construir</span> el pipeline en Google Earth Engine con 6 bandas Sentinel-2, 3 índices foliares y 3 variables eólicas ERA5.
+        </div>
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <span class="text-amber-400 font-bold">2. Delimitar</span> la malla vectorial de celdas de 640m × 640m (40.96 ha) y generar parches de 12 canales y 64×64 píxeles.
+        </div>
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <span class="text-amber-400 font-bold">3. Triangular</span> cicatrices históricas mediante vértices perimetrales (A, B, C, D) para verificación territorial.
+        </div>
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+          <span class="text-amber-400 font-bold">4. Diseñar y entrenar</span> EarlyFusionFireNet en PyTorch aplicando regularización de pesos, Label Smoothing y Gradient Clipping.
+        </div>
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 col-span-1 sm:col-span-2">
+          <span class="text-amber-400 font-bold">5. Exportar</span> las inferencias territoriales a capas GeoJSON para visualización operativa en QGIS y tableros comunitarios.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Comparativa Reactivo vs. Preventivo -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Monitoreo Reactivo vs Preventivo">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-purple-500/20 text-purple-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Evolución de Paradigma: Reactivo vs. Preventivo</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Enfoque Convencional -->
+        <div class="p-6 rounded-2xl bg-rose-950/30 border border-rose-800/40 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-rose-300">Enfoque Tradicional (Pasivo)</h3>
+            <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 text-xs font-bold uppercase">Reactivo</span>
+          </div>
+          <ul class="space-y-3 text-xs text-slate-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-rose-400 font-bold">✕</span>
+              <span><strong>Sensores térmicos (MODIS/VIIRS):</strong> Detectan calor únicamente cuando la masa vegetal ya está en llamas.</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-rose-400 font-bold">✕</span>
+              <span><strong>Pérdida de la ventana de acción:</strong> Cuando se emite la alarma, el fuego ya abarca cientos de hectáreas.</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-rose-400 font-bold">✕</span>
+              <span><strong>Sin predicción de sequedad:</strong> Ignora el contenido hídrico de la biomasa antes del evento.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Enfoque Propuesto -->
+        <div class="p-6 rounded-2xl bg-emerald-950/30 border border-emerald-800/40 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-emerald-300">Propuesta RADAGAST (Early Fusion)</h3>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold uppercase">Anticipatorio</span>
+          </div>
+          <ul class="space-y-3 text-xs text-slate-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400 font-bold">✓</span>
+              <span><strong>Modelado pre-ignición:</strong> Predice qué cuadrantes arderán en base a deshidratación vegetal y viento.</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400 font-bold">✓</span>
+              <span><strong>Resolución de 10 metros:</strong> Zonificación de riesgo a escala de parcela con Sentinel-2 L2A.</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400 font-bold">✓</span>
+              <span><strong>Patrullajes dirigidos:</strong> Permite realizar cortafuegos y movilizar brigadas antes del siniestro.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Espectrometría Sentinel-2 -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Espectrometría Sentinel-2">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-cyan-500/20 text-cyan-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Espectrometría Satelital Óptica (Sentinel-2 L2A)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold uppercase">Espectro Visible</span>
+          <h4 class="text-sm font-bold text-white">B2, B3, B4 (10 metros)</h4>
+          <p class="text-slate-400 leading-relaxed">Canales Azul, Verde y Rojo. Registran el dosel verde y permiten descartar coberturas no boscosas y cuerpos de agua.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold uppercase">Infrarrojo Cercano</span>
+          <h4 class="text-sm font-bold text-white">B8 - NIR (10 metros)</h4>
+          <p class="text-slate-400 leading-relaxed">Reflectancia de la estructura celular del mesófilo foliar. Fundamental para medir la biomasa vegetal viva.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold uppercase">Infrarrojo de Onda Corta</span>
+          <h4 class="text-sm font-bold text-white">B11 y B12 - SWIR (20m a 10m)</h4>
+          <p class="text-slate-400 leading-relaxed">Altamente sensible a la absorción de agua en hojas y suelo. Remuestreado bicúbicamente a 10m para mantener resolución homogénea.</p>
+        </div>
+      </div>
+
+      <div class="mt-6 p-4 rounded-xl bg-slate-900 border border-cyan-500/30 text-xs text-slate-300">
+        <span class="text-cyan-400 font-bold">Filtrado Atmosférico:</span> Se aplica la máscara de clasificación de escena (SCL) con <code class="text-rose-300">CLOUDY_PIXEL_PERCENTAGE &lt; 20%</code>, eliminando nubes y sombras que generarían falsas alarmas.
+      </div>
+    </section>
+
+    <!-- SLIDE 12: Índices Biofísicos -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Índices Biofísicos Foliares">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Formulación de Índices de Estrés Hídrico</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- NDMI -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-emerald-400">NDMI (Humedad Foliar)</h3>
+          <div class="p-2.5 rounded-lg bg-slate-950 font-mono text-xs text-slate-200 text-center border border-slate-800">
+            NDMI = (B8 - B11) / (B8 + B11)
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Mide el contenido de agua en la estructura celular de las hojas. Sus valores caen abruptamente cuando el bosque chiquitano sufre sequía.
+          </p>
+        </div>
+
+        <!-- NMDI -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-cyan-400">NMDI (Sequía Multibanda)</h3>
+          <div class="p-2.5 rounded-lg bg-slate-950 font-mono text-xs text-slate-200 text-center border border-slate-800">
+            (B8 - (B11 - B12)) / (B8 + (B11 - B12))
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Sensible a la desecación simultánea del dosel vegetal y del estrato de suelo subyacente, captando el combustible seco caído.
+          </p>
+        </div>
+
+        <!-- NBR -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-amber-400">NBR (Razón de Calcinación)</h3>
+          <div class="p-2.5 rounded-lg bg-slate-950 font-mono text-xs text-slate-200 text-center border border-slate-800">
+            NBR = (B8 - B12) / (B8 + B12)
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Evalúa la densidad de biomasa viva antes del fuego y delimita con precisión las cicatrices calcinadas (dNBR) para verificación.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 13: Cinemática del Viento ERA5 -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Cinemática Eólica ERA5">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-blue-500/20 text-blue-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Dinámica Meteorológica y Viento (ERA5-Land)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
+          <p>
+            El viento es el acelerador crítico en la propagación de fuegos forestales en las llanuras y serranías chiquitanas, aportando oxígeno continuo y generando saltos de pavesas a grandes distancias.
+          </p>
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+            <h4 class="text-sky-400 font-bold uppercase text-[11px]">Componentes Extraídas (ECMWF):</h4>
+            <ul class="space-y-1 text-slate-400">
+              <li>• Componente zonal <strong>u</strong> (vector Este-Oeste a 10m de altura)</li>
+              <li>• Componente meridional <strong>v</strong> (vector Norte-Sur a 10m de altura)</li>
+              <li>• Magnitud continua escalar calculada:</li>
+            </ul>
+            <div class="p-2 rounded bg-slate-950 font-mono text-center text-slate-200">
+              Velocidad = √(u² + v²)
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 space-y-4">
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Remuestreo y Fusión</span>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            La resolución nativa de ERA5-Land (aprox. 9 km) se interpola espacialmente mediante convolución bicúbica hacia la cuadrícula de <strong>10 metros</strong> de Sentinel-2.
+          </p>
+          <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/30 text-xs text-amber-300">
+            Esto permite que cada píxel de 10m posea su condición biofísica espectral y su vector eólico asociado en un único tensor de entrada.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 14: Arquitectura Early Fusion -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Arquitectura Early Fusion">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-violet-500/20 text-violet-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Concepto de Fusión Temprana (Early Fusion)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-slate-300">Fusión Tardía (Late Fusion)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Las bandas espectrales y los datos de viento se procesan en redes separadas y solo se combinan en las últimas capas densas. <strong>Desventaja:</strong> Pierde la correlación cruzada no lineal temprana entre sequía y viento.
+          </p>
+          <div class="p-2.5 rounded bg-slate-950 font-mono text-[11px] text-slate-400 border border-slate-800 text-center">
+            Rama Óptica + Rama Eólica → Capa Final
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-violet-950/30 border border-violet-800/40 space-y-3">
+          <h3 class="text-sm font-bold text-violet-300">Fusión Temprana (Early Fusion - Nuestro Enfoque)</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Los 12 canales se concatenan en la entrada formando un tensor unificado <strong>X ∈ ℝ^(B×12×64×64)</strong>. La primera capa convolucional extrae de inmediato patrones cruzados de sequedad foliar y viento.
+          </p>
+          <div class="p-2.5 rounded bg-slate-950 font-mono text-[11px] text-violet-300 border border-violet-800/40 text-center">
+            Tensor 12 Canales → Conv1 (64, 12, 7, 7)
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300">
+        <span class="text-violet-400 font-bold">Estructura del Tensor de 12 Canales:</span>
+        <span class="font-mono text-slate-400 ml-2">[B2, B3, B4, B8, B11, B12, NDMI, NMDI, NBR, u, v, Velocidad]</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 15: EarlyFusionFireNet Topology -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Topología EarlyFusionFireNet">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-rose-500/20 text-rose-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Topología del Modelo (PyTorch CUDA)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold uppercase">Backbone ResNet-50</span>
+          <h4 class="text-sm font-bold text-white">Reconfiguración conv1</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Se sustituye la capa conv1 estándar (64, 3, 7, 7) por <strong>(64, 12, 7, 7)</strong> para recibir los 12 canales sin colapso dimensional.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold uppercase">Transfer Learning</span>
+          <h4 class="text-sm font-bold text-white">Inicialización Kaiming</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Se retienen los pesos preentrenados de ImageNet en los 3 canales RGB; los 9 canales restantes se inicializan con distribución Kaiming Normal.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase">Head Clasificador</span>
+          <h4 class="text-sm font-bold text-white">Salida Multiclase</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Dropout(0.30) → Linear(2048, 256) → ReLU → Dropout(0.30) → Linear(256, 4). Genera logits para las 4 clases de riesgo.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-6 p-4 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-slate-300 flex justify-between items-center">
+        <span>Parámetros Totales: ~23.5 Millones</span>
+        <span class="text-rose-400 font-bold">Optimizado para GPU NVIDIA Tesla T4</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 16: Estabilización Numérica y Regularización -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Estabilización Numérica">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-red-500/20 text-red-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Mitigación del Colapso de Gradiente</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <h3 class="text-sm font-bold text-amber-400">1. Pesos Acotados (Weight Clipping)</h3>
+          <p class="text-slate-300 leading-relaxed">
+            Los pesos inversos de clase desbalanceada se restringen mediante <code class="text-rose-300 font-mono">clip(w, 0.5, 6.0)</code>. Erradica multiplicadores destructivos (w > 250) que desestabilizan la pérdida.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <h3 class="text-sm font-bold text-sky-400">2. Suavizado de Etiquetas (Label Smoothing)</h3>
+          <p class="text-slate-300 leading-relaxed">
+            Se aplica <code class="text-rose-300 font-mono">ε = 0.05</code> en la función CrossEntropyLoss. Evita que la red desarrolle sobreconfianza extrema en los límites de decisión entre clases limítrofes.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <h3 class="text-sm font-bold text-emerald-400">3. Recorte de Gradientes (Gradient Clipping)</h3>
+          <p class="text-slate-300 leading-relaxed">
+            Restricción estricta de la norma euclidiana máxima de gradientes a <code class="text-rose-300 font-mono">max_norm = 1.0</code>, garantizando una convergencia asintótica y monótona decreciente.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-6 p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 flex items-center justify-between">
+        <span>Scheduler: Cosine Annealing (lr: 2×10⁻⁴ a 1×10⁻⁶ en 15 épocas)</span>
+        <span class="text-emerald-400 font-bold">Curva de pérdida final: 0.5145</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 17: Malla Espacial 640m x 640m -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Malla Espacial de Monitoreo">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-teal-500/20 text-teal-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Segmentación Territorial y Grilla de Muestreo</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
+          <p>
+            Para que la red neuronal procese el territorio de forma estandarizada, la superficie chiquitana se divide en una cuadrícula regular proyectada en <strong>UTM Zona 20S (EPSG:32720)</strong>.
+          </p>
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+            <div class="flex justify-between border-b border-slate-800 pb-2">
+              <span class="text-slate-400">Dimensión geométrica:</span>
+              <span class="font-mono text-white font-bold">640 metros × 640 metros</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-800 pb-2">
+              <span class="text-slate-400">Área superficial por celda:</span>
+              <span class="font-mono text-amber-400 font-bold">40.96 hectáreas</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Matriz de entrada (Píxeles a 10m):</span>
+              <span class="font-mono text-emerald-400 font-bold">64 × 64 píxeles</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 space-y-3">
+          <span class="text-xs font-bold text-teal-400 uppercase tracking-widest">Empaquetamiento Binario (.npz)</span>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Cada cuadrante de 40.96 ha se extrae de Google Earth Engine y se almacena como un parche comprimido <code class="text-rose-400">dataset_chiquitania_12ch.npz</code>.
+          </p>
+          <div class="p-3 bg-teal-500/10 rounded-xl border border-teal-500/30 text-xs text-teal-300">
+            Elimina el cuello de botella de lectura/escritura (I/O) en disco durante el entrenamiento por lotes en GPU.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 18: Triangulación de Cicatrices (Puntos A, B, C, D) -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Triangulación Cartográfica">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-amber-500/20 text-amber-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Triangulación Perimetral de Cicatrices</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3 text-xs text-slate-300">
+          <p class="leading-relaxed">
+            Siguiendo las directrices del proyecto, no se toma una sola coordenada central del municipio. Se realiza el levantamiento poligonal en los bordes de la cicatriz de quema:
+          </p>
+          <div class="space-y-2">
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between">
+              <span class="font-bold text-amber-400">Punto A:</span>
+              <span class="text-slate-400">Vértice perimetral Norte / Borde del incendio</span>
+            </div>
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between">
+              <span class="font-bold text-amber-400">Punto B:</span>
+              <span class="text-slate-400">Vértice perimetral Este / Límite de propagación</span>
+            </div>
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between">
+              <span class="font-bold text-amber-400">Punto C:</span>
+              <span class="text-slate-400">Vértice perimetral Sur / Foco de origen</span>
+            </div>
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between">
+              <span class="font-bold text-amber-400">Punto D:</span>
+              <span class="text-slate-400">Vértice perimetral Oeste / Contención</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3 text-xs">
+          <h4 class="text-sm font-bold text-white">Secuencia Operativa SIG:</h4>
+          <ol class="space-y-2 text-slate-400 list-decimal list-inside">
+            <li>Identificar la cicatriz en imagen Sentinel-2 / Landsat post-quema.</li>
+            <li>Registrar latitud y longitud de los 4 vértices extremos.</li>
+            <li>Construir el polígono vectorial cerrado en QGIS.</li>
+            <li>Calcular el área geométrica en hectáreas.</li>
+            <li>Cruzar con el catálogo de focos térmicos para validación.</li>
+          </ol>
+          <div class="mt-4 p-3 bg-amber-500/10 rounded-xl border border-amber-500/30 text-amber-300">
+            Asegura que el entrenamiento del modelo reconozca la morfología real del fuego en el monte.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 19: Los 5 Mapas Requeridos -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Cartografía Temática">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-blue-500/20 text-blue-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Cartografía Temática Obligatoria</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+          <span class="text-rose-400 font-bold">Mapa 1:</span>
+          <p class="text-white font-semibold mt-1">Ubicación Departamental</p>
+          <p class="text-slate-400 mt-1">Localización de la Chiquitanía en el contexto de Santa Cruz y Bolivia.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+          <span class="text-rose-400 font-bold">Mapa 2:</span>
+          <p class="text-white font-semibold mt-1">Afectación Municipal 2024</p>
+          <p class="text-slate-400 mt-1">Distribución de hectáreas quemadas por municipio (Concepción, San Matías, etc.).</p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+          <span class="text-rose-400 font-bold">Mapa 3:</span>
+          <p class="text-white font-semibold mt-1">Cicatrices dNBR Históricas</p>
+          <p class="text-slate-400 mt-1">Severidad de quema en el Territorio Indígena Monte Verde (APCOB).</p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+          <span class="text-rose-400 font-bold">Mapa 4:</span>
+          <p class="text-white font-semibold mt-1">Triangulación Perimetral</p>
+          <p class="text-slate-400 mt-1">Zona piloto de estudio con vértices A, B, C, D georreferenciados.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-emerald-500/40 col-span-1 sm:col-span-2">
+          <span class="text-emerald-400 font-bold">Mapa 5 (Producto Final):</span>
+          <p class="text-white font-semibold mt-1">Zonificación de Riesgo Predictivo</p>
+          <p class="text-slate-400 mt-1">Capas vectoriales GeoJSON con cuadrículas clasificadas (Bajo, Medio, Alto, Extremo) para despacho de brigadas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 20: Encuestas y Diagnóstico Comunitario (50/50) -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Diseño de Encuestas 50/50">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Diagnóstico Comunitario: Enfoque 50/50</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Bloque Fuego -->
+        <div class="p-5 rounded-2xl bg-rose-950/30 border border-rose-800/40 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-rose-300">Módulo I: Dinámica del Fuego (50%)</h3>
+            <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 text-[11px] font-bold">4 Preguntas</span>
+          </div>
+          <ul class="space-y-2 text-xs text-slate-300">
+            <li>• Factores meteorológicos de descontrol (viento vs sequedad).</li>
+            <li>• Tiempos de detección y respuesta de brigadas locales.</li>
+            <li>• Limitaciones percibidas de los satélites térmicos.</li>
+            <li>• Aceptación de mapas predictivos de riesgo previo.</li>
+          </ul>
+        </div>
+
+        <!-- Bloque Fauna -->
+        <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-800/40 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-amber-300">Módulo II: Fauna y Acción Local (50%)</h3>
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[11px] font-bold">4 Preguntas</span>
+          </div>
+          <ul class="space-y-2 text-xs text-slate-300">
+            <li>• Especies más vulnerables (mamíferos lentos, reptiles).</li>
+            <li>• Rutas de escape y refugio hacia áreas pobladas.</li>
+            <li>• Existencia de protocolos de auxilio y centros de rescate.</li>
+            <li>• Disposición ciudadana a emitir alertas móviles georreferenciadas.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4 p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400 text-center">
+        Estructurado bajo preguntas cerradas y en abanico para tabulación estadística paramétrica directa.
+      </div>
+    </section>
+
+    <!-- SLIDE 21: Redes Móviles Comunitarias -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Redes Móviles Comunitarias">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-indigo-500/20 text-indigo-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Alerta Temprana en Dispositivos Móviles</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">1</div>
+          <h4 class="text-sm font-bold text-white">Recepción de Alertas</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Las cuadrículas clasificadas en nivel <strong>Rojo (Extremo)</strong> envían notificaciones push automáticas a guardaparques y brigadistas en el sector.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">2</div>
+          <h4 class="text-sm font-bold text-white">Reporte de Campo Offline</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Permite a los comunarios registrar coordenadas GPS y fotografías de focos incipientes o fauna herida sin requerir conexión a internet inmediata.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">3</div>
+          <h4 class="text-sm font-bold text-white">Sincronización Automática</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Al detectar cobertura móvil en caminos o centros urbanos, los datos se sincronizan con la base central para actualizar la cartografía de QGIS.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 22: Presupuesto y Viabilidad Financiera -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Presupuesto y Evaluación Financiera">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Presupuesto del Proyecto (Capítulo IX)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <!-- Tabla -->
+        <div class="space-y-2 text-xs">
+          <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 flex justify-between">
+            <span class="text-slate-300">Cómputo en la Nube y GPU (Tesla T4)</span>
+            <span class="font-mono font-bold text-white">4.200 BOB</span>
+          </div>
+          <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 flex justify-between">
+            <span class="text-slate-300">Datos Satelitales (GEE y Sentinel-2)</span>
+            <span class="font-mono font-bold text-emerald-400">0 BOB (Open Data)</span>
+          </div>
+          <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 flex justify-between">
+            <span class="text-slate-300">Software SIG y Entornos (QGIS / PyTorch)</span>
+            <span class="font-mono font-bold text-emerald-400">0 BOB (FOSS)</span>
+          </div>
+          <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 flex justify-between">
+            <span class="text-slate-300">Validación de Campo (Puntos A, B, C, D)</span>
+            <span class="font-mono font-bold text-white">5.500 BOB</span>
+          </div>
+          <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 flex justify-between">
+            <span class="text-slate-300">Materiales y Difusión Académica</span>
+            <span class="font-mono font-bold text-white">1.800 BOB</span>
+          </div>
+          <div class="p-3 bg-rose-500/10 rounded-xl border border-rose-500/30 flex justify-between font-bold text-rose-300">
+            <span>Inversión Inicial Total:</span>
+            <span class="font-mono text-sm">11.500 BOB</span>
+          </div>
+        </div>
+
+        <!-- Criterio Financiero -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3 text-xs">
+          <h4 class="text-sm font-bold text-white">Criterio de Evaluación Económica:</h4>
+          <p class="text-slate-400 leading-relaxed">
+            Siguiendo las pautas de proyectos de inversión vistas en aula (VAN y B/C), el retorno social se cuantifica como <strong>pérdida económica evitada</strong>:
+          </p>
+          <div class="p-3 bg-slate-950 rounded-xl font-mono text-slate-300 border border-slate-800 space-y-1">
+            <p>• Costo por hectárea quemada: ~150 $US</p>
+            <p>• Prevenir solo 50 ha = 7.500 $US salvados</p>
+            <p class="text-emerald-400 font-bold">• Relación Beneficio/Costo >> 1.0 (Altamente Viable)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 23: Cronograma de Ejecución (Gantt) -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Cronograma de Actividades">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-purple-500/20 text-purple-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Cronograma de Ejecución (6 Meses)</h2>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <!-- Fase 1 -->
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 grid grid-cols-12 gap-2 items-center">
+          <div class="col-span-6 font-semibold text-slate-200">1. Delimitación de grilla y revisión bibliográfica</div>
+          <div class="col-span-6 flex space-x-1">
+            <div class="h-5 flex-1 bg-rose-500 rounded text-[10px] flex items-center justify-center font-bold text-white">Mes 1</div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+          </div>
+        </div>
+
+        <!-- Fase 2 -->
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 grid grid-cols-12 gap-2 items-center">
+          <div class="col-span-6 font-semibold text-slate-200">2. Extracción satelital y Mosaico en GEE</div>
+          <div class="col-span-6 flex space-x-1">
+            <div class="h-5 flex-1 bg-amber-500 rounded text-[10px] flex items-center justify-center font-bold text-white">Mes 1</div>
+            <div class="h-5 flex-1 bg-amber-500 rounded text-[10px] flex items-center justify-center font-bold text-white">Mes 2</div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+          </div>
+        </div>
+
+        <!-- Fase 3 -->
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 grid grid-cols-12 gap-2 items-center">
+          <div class="col-span-6 font-semibold text-slate-200">3. Dataset de 12 canales y triangulación de cicatrices</div>
+          <div class="col-span-6 flex space-x-1">
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-emerald-500 rounded text-[10px] flex items-center justify-center font-bold text-white">Mes 2</div>
+            <div class="h-5 flex-1 bg-emerald-500 rounded text-[10px] flex items-center justify-center font-bold text-white">Mes 3</div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+          </div>
+        </div>
+
+        <!-- Fase 4 -->
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 grid grid-cols-12 gap-2 items-center">
+          <div class="col-span-6 font-semibold text-slate-200">4. Entrenamiento de EarlyFusionFireNet (PyTorch)</div>
+          <div class="col-span-6 flex space-x-1">
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-sky-500 rounded text-[10px] flex items-center justify-center font-bold text-white">Mes 4</div>
+            <div class="h-5 flex-1 bg-sky-500 rounded text-[10px] flex items-center justify-center font-bold text-white">Mes 5</div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+          </div>
+        </div>
+
+        <!-- Fase 5 -->
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 grid grid-cols-12 gap-2 items-center">
+          <div class="col-span-6 font-semibold text-slate-200">5. Validación cartográfica SIG y Perfil final</div>
+          <div class="col-span-6 flex space-x-1">
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-slate-800 rounded"></div>
+            <div class="h-5 flex-1 bg-purple-500 rounded text-[10px] flex items-center justify-center font-bold text-white">Mes 5</div>
+            <div class="h-5 flex-1 bg-purple-500 rounded text-[10px] flex items-center justify-center font-bold text-white">Mes 6</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 24: Resultados Esperados y Métricas -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Resultados y Validación">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Resultados Esperados del Modelo</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 text-center">
+          <span class="text-4xl font-extrabold text-emerald-400 font-display">> 93%</span>
+          <p class="text-xs text-slate-400 mt-1 font-semibold uppercase">Exactitud Global (Accuracy)</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 text-center">
+          <span class="text-4xl font-extrabold text-sky-400 font-display">> 0.89</span>
+          <p class="text-xs text-slate-400 mt-1 font-semibold uppercase">Macro F1-Score</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 text-center">
+          <span class="text-4xl font-extrabold text-rose-500 font-display">> 98%</span>
+          <p class="text-xs text-slate-400 mt-1 font-semibold uppercase">Sensibilidad (Clase Extremo)</p>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 space-y-2">
+        <h4 class="text-sm font-bold text-white">Impacto en la Reducción del Falso Negativo Crítico:</h4>
+        <p class="text-slate-400 leading-relaxed">
+          El ajuste por funciones acotadas y sensibilidad focalizada garantiza que prácticamente ninguna celda con condiciones extremas de ignición sea omitida, asegurando que las cuadrículas en peligro sean alertadas a los comités de emergencia antes de la primera llama.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 25: Conclusiones y Recomendaciones -->
+    <section class="slide flex-col justify-center max-w-5xl w-full h-full p-6 sm:p-10 glass-card rounded-3xl" data-title="Conclusiones y Recomendaciones">
+      <div class="flex items-center space-x-3 mb-6">
+        <span class="p-2 rounded-xl bg-rose-500/20 text-rose-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-display text-white">Conclusiones y Recomendaciones</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider">Conclusiones Principales</h3>
+          <ul class="space-y-2 text-slate-300">
+            <li>• La fusión temprana de 12 canales resuelve la limitación reactiva de los focos de calor tradicionales.</li>
+            <li>• La calibración biofísica con percentiles locales del bosque chiquitano elimina el colapso monoclase.</li>
+            <li>• La regularización coordinada (Weight Clipping + Label Smoothing) estabiliza la convergencia del entrenamiento.</li>
+            <li>• El sistema es escalable hacia los 6 municipios más castigados de Santa Cruz.</li>
+          </ul>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider">Recomendaciones Finales</h3>
+          <ul class="space-y-2 text-slate-300">
+            <li>• Instalar nodos de validación en campo en coordinación con la TCO Monte Verde y el COED Santa Cruz.</li>
+            <li>• Incorporar modelos hidrológicos de recarga freática en versiones futuras del tensor multimodal.</li>
+            <li>• Capacitar a los bomberos comunitarios en la interpretación de los mapas de calor predictivo en teléfonos móviles.</li>
+            <li>• Presentar formalmente el perfil ante la Dirección de Carrera de la Universidad Privada Cumbre.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-6 text-center text-xs text-slate-400">
+        ¡Muchas gracias por su atención! • Sesión de Preguntas y Respuestas
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="w-full z-40 bg-slate-900/90 backdrop-blur border-t border-slate-800 px-4 py-3 flex items-center justify-between shrink-0">
+    <div class="flex items-center space-x-2">
+      <span class="text-xs text-slate-400 font-medium hidden sm:inline">Navegación:</span>
+      <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700 font-mono hidden md:inline">← / →</span>
+      <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700 font-mono hidden md:inline">Espacio</span>
+      <span id="slideTitleDisplay" class="text-xs font-semibold text-rose-300 truncate max-w-[200px] sm:max-w-md ml-2">Portada Institucional</span>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <button onclick="prevSlide()" id="prevBtn" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center space-x-1.5 transition disabled:opacity-30 disabled:cursor-not-allowed">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <span>Anterior</span>
+      </button>
+      <button onclick="nextSlide()" id="nextBtn" class="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-lg shadow-rose-900/40 transition">
+        <span>Siguiente</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </footer>
+
+  <div id="overviewModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex flex-col justify-between p-4 sm:p-8">
+    <div class="w-full max-w-6xl mx-auto flex items-center justify-between pb-4 border-b border-slate-800">
+      <div>
+        <h2 class="text-lg font-bold font-display text-white">Índice Completo de Diapositivas (25)</h2>
+        <p class="text-xs text-slate-400">Selecciona cualquier diapositiva para saltar directamente</p>
+      </div>
+      <button onclick="toggleOverview()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Thumbnails Grid -->
+    <div class="w-full max-w-6xl mx-auto my-4 overflow-y-auto flex-1 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 pr-2" id="thumbnailsContainer">
+      <!-- Generated dynamically by script -->
+    </div>
+
+    <div class="w-full max-w-6xl mx-auto pt-2 border-t border-slate-800 text-right text-xs text-slate-500">
+      Presiona <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-300 font-mono">ESC</kbd> para cerrar
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const currentSlideDisplay = document.getElementById('currentSlideDisplay');
+    const totalSlidesDisplay = document.getElementById('totalSlidesDisplay');
+    const progressBar = document.getElementById('progressBar');
+    const slideTitleDisplay = document.getElementById('slideTitleDisplay');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const overviewModal = document.getElementById('overviewModal');
+    const thumbnailsContainer = document.getElementById('thumbnailsContainer');
+
+    totalSlidesDisplay.textContent = totalSlides.toString().padStart(2, '0');
+
+    // Build thumbnails
+    slides.forEach((slide, index) => {
+      const title = slide.getAttribute('data-title') || `Diapositiva ${index + 1}`;
+      const thumb = document.createElement('button');
+      thumb.className = `p-3 rounded-xl border text-left flex flex-col justify-between transition-all duration-200 h-28 ${index === 0 ? 'bg-rose-950/40 border-rose-500 text-white' : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:bg-slate-800 hover:border-slate-700'}`;
+      thumb.id = `thumb-${index}`;
+      thumb.onclick = () => {
+        goToSlide(index);
+        toggleOverview();
+      };
+      thumb.innerHTML = `
+        <span class="text-xs font-mono font-bold ${index === 0 ? 'text-rose-400' : 'text-slate-500'}">${(index + 1).toString().padStart(2, '0')}</span>
+        <span class="text-[11px] font-semibold text-slate-200 leading-snug line-clamp-2">${title}</span>
+      `;
+      thumbnailsContainer.appendChild(thumb);
+    });
+
+    function updateSlide() {
+      slides.forEach((slide, idx) => {
+        slide.classList.remove('active');
+        const thumb = document.getElementById(`thumb-${idx}`);
+        if (thumb) {
+          if (idx === currentSlide) {
+            thumb.className = 'p-3 rounded-xl border text-left flex flex-col justify-between transition-all duration-200 h-28 bg-rose-950/40 border-rose-500 text-white shadow-lg shadow-rose-950/50';
+          } else {
+            thumb.className = 'p-3 rounded-xl border text-left flex flex-col justify-between transition-all duration-200 h-28 bg-slate-900/80 border-slate-800 text-slate-400 hover:bg-slate-800 hover:border-slate-700';
+          }
+        }
+      });
+
+      slides[currentSlide].classList.add('active');
+      const formattedIndex = (currentSlide + 1).toString().padStart(2, '0');
+      currentSlideDisplay.textContent = formattedIndex;
+
+      const progress = ((currentSlide + 1) / totalSlides) * 100;
+      progressBar.style.width = `${progress}%`;
+
+      const title = slides[currentSlide].getAttribute('data-title') || `Diapositiva ${currentSlide + 1}`;
+      slideTitleDisplay.textContent = title;
+
+      prevBtn.disabled = currentSlide === 0;
+      if (currentSlide === totalSlides - 1) {
+        nextBtn.innerHTML = `<span>Finalizar</span>`;
+      } else {
+        nextBtn.innerHTML = `<span>Siguiente</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>`;
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < totalSlides) {
+        currentSlide = index;
+        updateSlide();
+      }
+    }
+
+    function toggleOverview() {
+      overviewModal.classList.toggle('hidden');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (overviewModal.classList.contains('hidden')) {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          nextSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'PageUp') {
+          e.preventDefault();
+          prevSlide();
+        } else if (e.key === 'f' || e.key === 'F') {
+          toggleFullScreen();
+        } else if (e.key === 'o' || e.key === 'O' || e.key === 'Escape') {
+          toggleOverview();
+        }
+      } else {
+        if (e.key === 'Escape') {
+          toggleOverview();
+        }
+      }
+    });
+
+    // Touch swipe navigation for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+
+    function handleSwipe() {
+      const threshold = 50;
+      if (touchEndX < touchStartX - threshold) {
+        nextSlide();
+      }
+      if (touchEndX > touchStartX + threshold) {
+        prevSlide();
+      }
+    }
+
+    // Initial update
+    updateSlide();
+  </script>
+</body>
+</html>
