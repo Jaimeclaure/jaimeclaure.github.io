@@ -6,29 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jaime Claure // Assets & Document Server</title>
 
-    <!-- Fuentes tipográficas estricta del ecosistema principal -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500&display=swap"
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500&display=swap"
         rel="stylesheet">
 
     <style>
-        /* VARIABLES CROMÁTICAS BAUHAUS Y RESETEO SEMÁNTICO */
         :root {
             --bg-dark: #030712;
-            /* Fondo oscuro profundo de Vercel */
             --color-cyan: #06B6D4;
-            /* Celeste técnico de tu marca */
             --color-orange: #EA580C;
-            /* Naranja creativo de tu marca */
             --bg-card: #0B0F19;
-            /* Gris de las tarjetas de consola */
             --text-light: #E5E7EB;
-            /* Texto neutral claro */
             --text-muted: #9CA3AF;
-            /* Texto gris de telemetría */
             --border-dark: #1F2937;
-            /* Bordes finos de celdas */
         }
 
         * {
@@ -56,12 +47,10 @@
             }
         }
 
-        /* TIPOGRAFÍA SERIF RADICAL */
         .font-serif {
             font-family: 'DM Serif Display', serif;
         }
 
-        /* RED NEURONAL / ESTRUCTURA BLUEPRINT DE FONDO */
         .blueprint-grid {
             position: absolute;
             top: 24px;
@@ -82,7 +71,6 @@
             }
         }
 
-        /* ARQUITECTURA DE REJILLA EDITORIAL ASIMÉTRICA */
         .layout-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -107,7 +95,6 @@
             }
         }
 
-        /* ELEMENTOS DE CONSOLA Y EFECTOS HOVER */
         .card-node {
             background-color: var(--bg-card);
             border: 1px solid var(--border-dark);
@@ -123,7 +110,6 @@
             border-color: #374151;
         }
 
-        /* ANIMACIÓN LED PULSE */
         .led-pulse {
             width: 8px;
             height: 8px;
@@ -149,10 +135,8 @@
 
 <body>
 
-    <!-- Línea de blueprint estructural -->
     <div class="blueprint-grid"></div>
 
-    <!-- CABECERA: Identidad y Conexión de Nodo -->
     <header
         style="max-width: 1024px; width: 100%; margin: 0 auto; border-bottom: 1px solid var(--border-dark); padding-bottom: 24px; display: flex; flex-direction: column; z-index: 10;">
         <div
@@ -162,8 +146,7 @@
                     style="font-family: monospace; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-cyan); display: flex; align-items: center; gap: 8px;">
                     <span class="led-pulse"></span> jaimeclaure.github.io // active_node
                 </span>
-                <h1 class="font-serif"
-                    style="font-size: 2.25rem; color: #F9FAFB; tracking-wide: 0.02em; margin-top: 8px;">Assets &
+                <h1 class="font-serif" style="font-size: 2.25rem; color: #F9FAFB; margin-top: 8px;">Assets &amp;
                     Document Server</h1>
             </div>
             <div>
@@ -177,14 +160,12 @@
         </div>
     </header>
 
-    <!-- CUERPO PRINCIPAL: Indexación de Documentaciones Científicas -->
     <main class="layout-grid">
-
-        <!-- Bloque Izquierdo: Terminal Informativo -->
         <div class="col-left" style="display: flex; flex-direction: column; gap: 16px;">
             <h2
                 style="font-family: monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted);">
-                Terminal de Archivos</h2>
+                Terminal de Archivos
+            </h2>
             <p style="font-size: 14px; color: #9CA3AF; line-height: 1.6;">
                 Infraestructura estática dedicada al almacenamiento seguro, distribución y renderizado automatizado de
                 documentación de software, papers científicos e informes de arquitectura de datos.
@@ -197,49 +178,34 @@
             </div>
         </div>
 
-        <!-- Bloque Derecho: Listado de Repositorios e Investigaciones -->
         <div class="col-right" style="display: flex; flex-direction: column; gap: 16px;">
             <h2
                 style="font-family: monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-bottom: 8px;">
-                Índice de Documentos e Investigaciones</h2>
+                Índice de Documentos e Investigaciones
+            </h2>
 
-            <!-- ÍTEM 1: Curriculum Vitae -->
+            <!-- ÍTEM 1: Abre el visor con PDF.js + Menú lateral de marcadores e impide descarga -->
             <div class="card-node">
                 <div>
-                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Curriculum Vitae // Senior Profile</p>
-                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: PDF •
-                        Size: ~350 KB • Type: Executive Resume</p>
-                </div>
-                <a href="documentos/mod10_defensa.pdf" target="_blank"
-                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;"
-                    onmouseover="this.style.color='var(--color-orange)'"
-                    onmouseout="this.style.color='var(--color-cyan)'">VIEW →</a>
-            </div>
-
-            <!-- ÍTEM 2: Paper de Deep Learning -->
-            <div class="card-node">
-                <div>
-                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Defensa</p>
-                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: PDF
-                        (Indexado) • Scope: MSc. Deep Learning &amp; AI</p>
-                </div>
-                <a href="pdfjs/web/viewer.html?file=/documentos/paper-tourism-prediction.pdf#pagemode=bookmarks"
-                    target="_blank"
-                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;"
-                    onmouseover="this.style.color='var(--color-orange)'"
-                    onmouseout="this.style.color='var(--color-cyan)'">VIEW →</a>
-            </div>
-
-            <!-- ÍTEM 3: PRESENTACIÓN PERSONALIZADA (Modificable según tu archivo real) -->
-            <div class="card-node">
-                <div>
-                    <!-- CAMBIA ESTE NOMBRE POR EL DE TU PROYECTO ACTUAL -->
-                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;"> CV de prueba
+                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Scientific Paper // Defense Research
                     </p>
-                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: HTML
-                        Framework • Scope: Interactive Slide Deck</p>
+                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format: PDF.js
+                        Indexed Viewer • Target: mod10_defensa</p>
                 </div>
-                <!-- REEMPLAZA "tu-archivo.html" POR LA RUTA DE TU DIAPOSITIVA REAL -->
+                <a href="Paper_JaimeClaure_001.html" target="_blank"
+                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;"
+                    onmouseover="this.style.color='var(--color-orange)'"
+                    onmouseout="this.style.color='var(--color-cyan)'">VIEW →</a>
+            </div>
+
+            <!-- ÍTEM 2: Abre la presentación contenida en Reveal.js (jc_cv.html con Hash router) -->
+            <div class="card-node">
+                <div>
+                    <p style="font-size: 14px; font-weight: 500; color: #F3F4F6;">Executive Portfolio // Presentation
+                        Deck</p>
+                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format:
+                        Reveal.js Contained Deck • Target: jc_cv</p>
+                </div>
                 <a href="slides/jc_cv.html" target="_blank"
                     style="font-family: monospace; font-size: 12px; color: var(--color-orange); text-decoration: none; font-weight: 500;"
                     onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='var(--color-orange)'">RUN →</a>
@@ -248,7 +214,6 @@
         </div>
     </main>
 
-    <!-- PIE DE PÁGINA: Derechos e Identidad Digital -->
     <footer
         style="max-width: 1024px; width: 100%; margin: 0 auto; border-top: 1px solid var(--border-dark); padding-top: 24px; display: flex; flex-direction: column; md:flex-direction: row; justify-content: space-between; align-items: center; font-family: monospace; font-size: 11px; color: #4B5563; gap: 16px;">
         <div>
