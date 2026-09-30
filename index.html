@@ -4,22 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jaime Claure // Assets & Document Server</title>
+    <title>Jaime Claure // Assets &amp; Document Server</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500&display=swap"
+    <!-- JetBrains Mono para look terminal/código + Inter para lectura ultra-legible -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     <style>
         :root {
             --bg-dark: #030712;
             --color-cyan: #06B6D4;
-            --color-orange: #EA580C;
+            --color-cyan-glow: rgba(6, 182, 212, 0.15);
+            --color-orange: #F59E0B;
+            /* Ámbar nítido para call-to-action */
             --bg-card: #0B0F19;
-            --text-light: #E5E7EB;
-            --text-muted: #9CA3AF;
-            --border-dark: #1F2937;
+            --bg-card-hover: #111827;
+            --text-main: #F3F4F6;
+            --text-body: #D1D5DB;
+            --text-label: #E5E7EB;
+            --text-muted: #6B7280;
+            --border-subtle: #1F2937;
+            --border-hover: #374151;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+            --radius-ui: 4px;
         }
 
         * {
@@ -30,8 +41,8 @@
 
         body {
             background-color: var(--bg-dark);
-            color: var(--text-light);
-            font-family: 'Outfit', sans-serif;
+            color: var(--text-body);
+            font-family: var(--font-sans);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -39,6 +50,8 @@
             position: relative;
             overflow-x: hidden;
             padding: 24px;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
         @media (min-width: 768px) {
@@ -47,17 +60,14 @@
             }
         }
 
-        .font-serif {
-            font-family: 'DM Serif Display', serif;
-        }
-
+        /* Blueprint grid estructural */
         .blueprint-grid {
             position: absolute;
             top: 24px;
             left: 24px;
             right: 24px;
             bottom: 24px;
-            border: 1px dashed rgba(31, 41, 55, 0.6);
+            border: 1px dashed rgba(31, 41, 55, 0.45);
             pointer-events: none;
             z-index: 0;
         }
@@ -71,14 +81,89 @@
             }
         }
 
+        /* Cabecera */
+        .header-container {
+            max-width: 1024px;
+            width: 100%;
+            margin: 0 auto;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 28px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .node-tag {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-cyan);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .title-server {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 100;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+            margin-top: 10px;
+            line-height: 1.2;
+        }
+
+        @media (min-width: 768px) {
+            .title-server {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Botón Terminal */
+        .btn-terminal {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: var(--text-main);
+            background: rgba(11, 15, 25, 0.8);
+            border: 1px solid var(--border-hover);
+            padding: 10px 18px;
+            border-radius: var(--radius-ui);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-terminal:hover {
+            border-color: var(--color-cyan);
+            background: var(--color-cyan-glow);
+            color: #FFFFFF;
+            box-shadow: 0 0 16px rgba(6, 182, 212, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Layout Grid */
         .layout-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 32px;
+            gap: 36px;
             z-index: 10;
             max-width: 1024px;
             width: 100%;
-            margin: 48px auto;
+            margin: 40px auto;
         }
 
         @media (min-width: 768px) {
@@ -95,27 +180,169 @@
             }
         }
 
+        /* Títulos de sección / Labels con alto contraste */
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--text-label);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before {
+            content: "•";
+            color: var(#4B5563);
+            font-size: 14px;
+        }
+
+        .desc-text {
+            color: var(--text-body);
+            font-size: 13.5px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* Consola de estado */
+        .console-box {
+            background-color: rgba(11, 15, 25, 0.7);
+            border: 1px solid var(--border-subtle); /* Borde simétrico y fino en todo el perímetro */
+            border-left: 1px solid var(--border-subtle); /* Quita el borde celeste grueso */
+            padding: 16px 18px;
+            border-radius: var(--radius-ui);
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            color: #94A3B8;
+            line-height: 1.85;
+            margin-top: 6px;   
+        }
+
+        .console-cursor {
+            display: inline-block;
+            width: 6px;
+            height: 12px;
+            background: #E5E7EB;
+            margin-left: 4px;
+            vertical-align: middle;
+            animation: cursorBlink 1.1s infinite;
+        }
+
+        @keyframes cursorBlink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Sistema unificado de tarjetas */
+        .cards-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
         .card-node {
             background-color: var(--bg-card);
-            border: 1px solid var(--border-dark);
-            padding: 16px;
-            border-radius: 2px;
-            transition: all 0.3s ease-out;
+            border: 1px solid var(--border-subtle);
+            padding: 20px 24px;
+            border-radius: var(--radius-ui);
+            min-height: 84px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
+            transition: all 0.2s ease-out;
+            position: relative;
         }
 
         .card-node:hover {
-            border-color: #374151;
+            background-color: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transform: translateX(2px);
         }
 
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .card-title {
+            font-family: var(--font-sans);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .card-meta {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+
+        /* Enlaces de acción */
+        .card-action {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            padding: 6px 12px;
+            border-radius: var(--radius-ui);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .action-cyan {
+            color: var(--color-cyan);
+            border-color: rgba(6, 182, 212, 0.2);
+        }
+
+        .action-cyan:hover {
+            color: #FFFFFF;
+            background: var(--color-cyan);
+            border-color: var(--color-cyan);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+        }
+
+        .action-orange {
+            color: var(--color-orange);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .action-orange:hover {
+            color: #030712;
+            background: var(--color-orange);
+            border-color: var(--color-orange);
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+        }
+
+        /* LED indicador */
         .led-pulse {
             width: 8px;
             height: 8px;
             background-color: var(--color-cyan);
             border-radius: 50%;
             display: inline-block;
+            box-shadow: 0 0 8px var(--color-cyan);
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
@@ -124,11 +351,53 @@
             0%,
             100% {
                 opacity: 1;
+                transform: scale(1);
             }
 
             50% {
                 opacity: .4;
+                transform: scale(0.9);
             }
+        }
+
+        /* Footer */
+        .footer-container {
+            max-width: 1024px;
+            width: 100%;
+            margin: 0 auto;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .footer-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-main);
         }
     </style>
 </head>
@@ -137,23 +406,18 @@
 
     <div class="blueprint-grid"></div>
 
-    <header
-        style="max-width: 1024px; width: 100%; margin: 0 auto; border-bottom: 1px solid var(--border-dark); padding-bottom: 24px; display: flex; flex-direction: column; z-index: 10;">
-        <div
-            style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+    <header class="header-container">
+        <div class="header-inner">
             <div>
-                <span
-                    style="font-family: monospace; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-cyan); display: flex; align-items: center; gap: 8px;">
-                    <span class="led-pulse"></span> jaimeclaure.github.io // active_node
+                <span class="node-tag">
+                    <span class="led-pulse"></span> active_node
                 </span>
-                <h1 class="font-serif" style="font-size: 2.25rem; color: #F9FAFB; margin-top: 8px;">assets server</h1>
+                <h1 class="title-server">~/jaimeclaure/assets_server/</h1>
             </div>
             <div>
-                <!-- Enlace blindado a www.jaimeclaure.com/ -->
+                <!-- Enlace blindado a www.jaimeclaure.com/ con nuevo estilo de consola -->
                 <a href="https://www.jaimeclaure.com/" target="_blank" rel="external noopener noreferrer"
-                    style="font-family: monospace; font-size: 12px; border: 1px solid #374151; padding: 8px 16px; border-radius: 2px; transition: all 0.3s; color: var(--text-muted); text-decoration: none;"
-                    onmouseover="this.style.borderColor='var(--color-orange)'; this.style.color='#FFF'"
-                    onmouseout="this.style.borderColor='#374151'; this.style.color='var(--text-muted)'">
+                    class="btn-terminal">
                     PAGINA PRINCIPAL ↗
                 </a>
             </div>
@@ -161,93 +425,83 @@
     </header>
 
     <main class="layout-grid">
+        <!-- Bloque Izquierdo: Terminal Informativo -->
         <div class="col-left" style="display: flex; flex-direction: column; gap: 16px;">
-            <h2
-                style="font-family: monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted);">
-                Terminal de Archivos
-            </h2>
-            <p style="font-size: 14px; color: #9CA3AF; line-height: 1.6;">
+            <h2 class="section-label">Terminal de Archivos</h2>
+            <p class="desc-text">
                 Infraestructura dedicada al almacenamiento seguro, distribución y renderizado automatizado de
-                documentación, papers científicos, informes y presentaciones.
+                documentación, papers científicos, informes técnicos y presentaciones.
             </p>
-            <div
-                style="background-color: rgba(11, 15, 25, 0.6); border: 1px solid var(--border-dark); padding: 16px; border-radius: 2px; font-family: monospace; font-size: 11px; color: #4B5563; line-height: 1.5;">
-                <p style="color: var(--color-cyan);">// SYSTEMS ENGINE PROTOCOL</p>
-                <p>status: build_compiled_secure</p>
-                <p>hosting_provider: secure_index_gateway</p>
+            <div class="console-box">
+                <p style="color: var(--color-grey); font-weight: 600;">// ENGINE PROTOCOL</p>
+                <p>&gt; status: <span style="color: var(--text-main);">build_compiled_secure</span></p>
+                <p>&gt; node_gateway: <span style="color: var(--text-main);">production_active</span><span
+                        class="console-cursor"></span></p>
             </div>
         </div>
 
-        <div class="col-right" style="display: flex; flex-direction: column; gap: 16px;">
-            <h2
-                style="font-family: monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-bottom: 8px;">
-                Índice de Documentos, Investigaciones y Presentaciones
-            </h2>
+        <!-- Bloque Derecho: Tarjetas con diseño y métricas unificadas -->
+        <div class="col-right">
+            <h2 class="section-label">Índice de Documentos, Investigaciones y Presentaciones</h2>
 
-            <!-- ÍTEM 1: Abre visor.html (que lee docs/doc.pdf de forma protegida) -->
-            <div class="card-node">
-                <div>
-                    <p style="font-size: 18px; font-weight: 500; color: #F3F4F6;">Documento</p>
-                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Format:
-                        PDF protected  and scope academic paper</p>
-                </div>
-                <a href="visor.html" target="_blank"
-                    style="font-family: monospace; font-size: 12px; color: var(--color-cyan); text-decoration: none; font-weight: 500;"
-                    onmouseover="this.style.color='var(--color-orange)'"
-                    onmouseout="this.style.color='var(--color-cyan)'">LEER →</a>
-            </div>
-
-            <!-- ÍTEM 2: Abre la carpeta slides/ (que ejecuta Reveal.js y monta deck.html) -->
-            <div class="card-node">
-                <div>
-                    <p style="font-size: 18px; font-weight: 500; color: #F3F4F6;">Presentación</p>
-                    <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Academic slides presentation revealer</p>
-                </div>
-                <a id="btn-slides" href="slides/" target="_blank"
-                    style="font-family: monospace; font-size: 12px; color: var(--color-orange); text-decoration: none; font-weight: 500;"
-                    onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='var(--color-orange)'">PRESENTAR →</a>
-            </div>
-
-                <!-- ÍTEM 2: Abre la carpeta slides/ (que ejecuta Reveal.js y monta deck.html) -->
+            <div class="cards-stack">
+                <!-- Ítem 1: Documento PDF (Visor) -->
                 <div class="card-node">
-                    <div>
-                        <p style="font-size: 18px; font-weight: 500; color: #F3F4F6;">Repositorio</p>
-                        <p style="font-family: monospace; font-size: 11px; color: #4B5563; margin-top: 4px;">Academic slides
-                            presentation revealer</p>
+                    <div class="card-info">
+                        <p class="card-title">Documento</p>
+                        <p class="card-meta">Format: PDF Protected • Target: docs/docs.pdf</p>
                     </div>
-                    <a id="btn-slides" href="PONER_URL" target="_blank"
-                        style="font-family: monospace; font-size: 12px; color: var(--color-white); text-decoration: none; font-weight: 500;"
-                        onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='var(--color-white)'">VER →</a>
+                    <a href="visor.html" target="_blank" class="card-action action-cyan">
+                        LEER →
+                    </a>
                 </div>
 
+                <!-- Ítem 2: Presentación (Slides) -->
+                <div class="card-node">
+                    <div class="card-info">
+                        <p class="card-title">Presentación</p>
+                        <p class="card-meta">Format: Responsive SPA Deck • Target: slides/</p>
+                    </div>
+                    <a id="btn-slides" href="slides/" target="_blank" class="card-action action-orange">
+                        PRESENTAR →
+                    </a>
+                </div>
 
+                <!-- Ítem 3: Repositorio -->
+                <div class="card-node">
+                    <div class="card-info">
+                        <p class="card-title">Repositorio</p>
+                        <p class="card-meta">Format: Git Infrastructure • Scope: Source Assets</p>
+                    </div>
+                    <a href="https://github.com/Jaimeclaure" target="_blank" rel="noopener noreferrer"
+                        class="card-action action-cyan">
+                        VER →
+                    </a>
+                </div>
+            </div>
         </div>
     </main>
 
-    <footer
-        style="max-width: 1024px; width: 100%; margin: 0 auto; border-top: 1px solid var(--border-dark); padding-top: 24px; display: flex; flex-direction: column; md:flex-direction: row; justify-content: space-between; align-items: center; font-family: monospace; font-size: 11px; color: #4B5563; gap: 16px;">
+    <footer class="footer-container">
         <div>
-            © 2026 Jaime Claure Alvarez. Todos los derechos reservados.
+            © Jaime Claure | Assets server
         </div>
-        <div style="display: flex; gap: 16px; align-items: center;">
-            <a href="https://github.com/Jaimeclaure" target="_blank" rel="noopener noreferrer"
-                style="color: #4B5563; text-decoration: none;" onmouseover="this.style.color='#9CA3AF'"
-                onmouseout="this.style.color='#4B5563'">GITHUB</a>
+        <div class="footer-links">
+            <a href="https://github.com/Jaimeclaure" target="_blank" rel="noopener noreferrer">GITHUB</a>
             <span>•</span>
-            <a href="https://medium.com/@jaimeclaure" target="_blank" rel="noopener noreferrer"
-                style="color: #4B5563; text-decoration: none;" onmouseover="this.style.color='#9CA3AF'"
-                onmouseout="this.style.color='#4B5563'">MEDIUM</a>
+            <a href="https://medium.com/@jaimeclaure" target="_blank" rel="noopener noreferrer">MEDIUM</a>
             <span>•</span>
-            <a href="https://x.com/jaibytes" target="_blank" rel="noopener noreferrer"
-                    style="color: #4B5563; text-decoration: none;" onmouseover="this.style.color='#9CA3AF'"
-                    onmouseout="this.style.color='#4B5563'">X</a>
+            <a href="https://x.com/jaibytes" target="_blank" rel="noopener noreferrer">X</a>
         </div>
     </footer>
 
     <!-- Detección automática para Live Server y doble clic local -->
     <script>
         if (window.location.protocol === 'file:') {
-            document.getElementById('btn-slides').setAttribute('href', 'slides/index.html');
+            const btnSlides = document.getElementById('btn-slides');
+            if (btnSlides) {
+                btnSlides.setAttribute('href', 'slides/index.html');
+            }
         }
     </script>
 </body>
