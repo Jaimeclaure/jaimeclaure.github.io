@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidad 3: Imagen en la Cultura Visual - UPDS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        upds: {
+                            blue: '#004596',
+                            white: '#FDFDFD',
+                            dark: '#00224a',
+                            light: '#e6f0fa'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'system-ui', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap');
+        
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: #000; 
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(1.05);
+            z-index: 1;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        /* Animaciones de entrada para el texto */
+        .slide.active .animate-fade-up {
+            animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.3s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Utilidades para imágenes */
+        .bg-overlay {
+            background: linear-gradient(90deg, rgba(0,69,150,0.95) 0%, rgba(0,69,150,0.8) 40%, rgba(0,69,150,0.2) 100%);
+        }
+        .bg-overlay-dark {
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.8) 100%);
+        }
+        .brand-decoration {
+            pointer-events: none;
+        }
+        .brand-lines {
+            width: clamp(5rem, 11vw, 9rem);
+            opacity: 0.46;
+        }
+        .brand-lines[data-theme="dark"] {
+            filter: brightness(0) invert(1);
+            opacity: 0.3;
+        }
+        .brand-mark {
+            display: block;
+            height: auto;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+        }
+        .brand-logo {
+            width: clamp(6.5rem, 12vw, 9rem);
+        }
+        .brand-anniversary {
+            width: clamp(3.5rem, 6vw, 4.5rem);
+        }
+        .concept-icon {
+            display: block;
+            width: 2.5rem;
+            height: 2.5rem;
+            color: #004596;
+            flex: none;
+        }
+        .concept-icon-light {
+            color: #e6f0fa;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <main id="slides-container" class="relative w-full h-screen bg-upds-white">
+        <div id="brand-decoration" class="brand-decoration absolute inset-0 z-40" aria-hidden="true">
+        <img src="../lineas1.png" alt="" class="brand-lines absolute top-0 left-0" data-brand-side="left">
+        <img src="../lineas2.png" alt="" class="brand-lines absolute top-0 right-0" data-brand-side="right">
+        <img id="anniversary-logo" src="https://upds-my.sharepoint.com/:i:/g/personal/tj_jaime_claure_a_upds_edu_bo/IQDUTf4ikZv6Q6WBA4oTc3jzAWZJiyL2XjOFAdf4OrW_TEk?e=ChNzmG&amp;download=1" alt="" class="brand-mark brand-anniversary absolute top-3 left-3 sm:top-5 sm:left-6">
+        <img id="upds-logo" src="https://upds-my.sharepoint.com/:i:/g/personal/tj_jaime_claure_a_upds_edu_bo/IQD2_Rqo8skqSLWbCqkx7Jc1AYfGCNI5G30dOgTchZTcVLg?e=IYAt46&amp;download=1" alt="" class="brand-mark brand-logo absolute top-3 right-3 sm:top-5 sm:right-6">
+        </div>
+        
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active bg-upds-dark" data-slide="1">
+            <img src="https://images.unsplash.com/photo-1516214104703-d25078014692?q=80&w=1920&auto=format&fit=crop" alt="Lente de cámara" class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay">
+            <div class="absolute inset-0 bg-overlay flex flex-col justify-center px-16 lg:px-32">
+                <div class="animate-fade-up max-w-4xl">
+                    <div class="w-20 h-1 bg-upds-white mb-8"></div>
+                    <h2 class="text-upds-white/80 text-xl font-semibold tracking-widest uppercase mb-4">Semiótica y Lenguaje de la Imagen</h2>
+                    <h1 class="text-6xl lg:text-8xl font-bold text-upds-white leading-tight mb-6 font-serif">La Imagen en la <br>Cultura Visual</h1>
+                    <p class="text-2xl text-upds-light font-light max-w-2xl">Unidad 3: De la Fotografía al Algoritmo.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white flex" data-slide="2" data-brand-right="dark">
+            <div class="w-1/2 flex flex-col justify-center px-16 lg:px-24 z-10 animate-fade-up">
+                <span class="text-upds-blue font-bold tracking-wider uppercase text-sm mb-4">El Contexto Actual</span>
+                <h2 class="text-5xl font-bold text-gray-900 mb-8 font-serif">Baja Densidad Simbólica vs. Vacío Digital</h2>
+                <div class="space-y-6 text-lg text-gray-600 font-light leading-relaxed">
+                    <p>Consumimos imágenes a una velocidad vertiginosa en ecosistemas saturados.</p>
+                    <p>Existe una sobreproducción mediática con una densidad semiótica cada vez más baja.</p>
+                    <p class="font-semibold text-upds-blue border-l-4 border-upds-blue pl-4 py-2 bg-upds-light/30">El algoritmo privilegia la inmediatez efímera sobre el sentido profundo.</p>
+                </div>
+            </div>
+            <div class="w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1920&auto=format&fit=crop" alt="Tecnología y aceleración" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-upds-blue/10 mix-blend-multiply"></div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-dark" data-slide="3">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/54/Lange-MigrantMother02.jpg" alt="Madre Migrante - Dorothea Lange" class="absolute w-1/2 h-full object-cover right-0 grayscale opacity-90">
+            <div class="absolute inset-0 bg-gradient-to-r from-upds-blue via-upds-blue/90 to-transparent w-2/3 flex flex-col justify-center px-16 lg:px-24">
+                <div class="animate-fade-up max-w-2xl">
+                    <h2 class="text-5xl font-bold text-upds-white mb-8 font-serif">La Mirada: Intencionalidad y Posición del Autor</h2>
+                    <p class="text-xl text-upds-light font-light mb-6">La mirada fotográfica nunca es neutral ni inocente. Representa la posición física y epistemológica de quien captura la imagen.</p>
+                    <ul class="space-y-4 text-upds-white/90">
+                        <li class="flex items-center"><div class="w-2 h-2 bg-upds-white rounded-full mr-4"></div> Mirar es un acto ideológico.</li>
+                        <li class="flex items-center"><div class="w-2 h-2 bg-upds-white rounded-full mr-4"></div> Se impone una postura ética sobre quién es observado.</li>
+                        <li class="flex items-center"><div class="w-2 h-2 bg-upds-white rounded-full mr-4"></div> Construcción del testimonio histórico intencionado.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white" data-slide="4" data-brand-left="dark">
+            <div class="flex h-full">
+                <div class="w-5/12 relative">
+                    <img src="https://images.unsplash.com/photo-1463123081488-789f998ac9c4?q=80&w=1920&auto=format&fit=crop" alt="Encuadre con las manos" class="w-full h-full object-cover">
+                </div>
+                <div class="w-7/12 flex flex-col justify-center px-20 bg-gray-50">
+                    <div class="animate-fade-up">
+                        <h2 class="text-5xl font-bold text-upds-blue mb-8 font-serif">El Encuadre como Frontera Semiótica</h2>
+                        <div class="grid grid-cols-2 gap-10">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4">Campo vs. Fuera de Campo</h3>
+                                <p class="text-gray-600 leading-relaxed">No solo decidimos qué entra a lo visible; definimos qué expulsamos al fuera de campo (lo sugerido, lo omitido).</p>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4">Selección de la Realidad</h3>
+                                <p class="text-gray-600 leading-relaxed">Encuadrar es jerarquizar. Al recortar la realidad, producimos significación y manipulamos la interpretación denotada.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-dark" data-slide="5">
+            <img src="https://images.unsplash.com/photo-1483168527879-c66136b56105?q=80&w=1920&auto=format&fit=crop" alt="Instante decisivo" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-luminosity">
+            <div class="absolute inset-0 bg-overlay flex flex-col justify-center items-end px-16 lg:px-32 text-right">
+                <div class="animate-fade-up max-w-3xl">
+                    <h2 class="text-6xl font-bold text-upds-white mb-6 font-serif">El Congelamiento Fotográfico</h2>
+                    <h3 class="text-3xl text-upds-light font-light mb-8 italic">"El Instante Decisivo"</h3>
+                    <div class="w-full flex justify-end mb-6"><div class="w-24 h-1 bg-upds-white"></div></div>
+                    <p class="text-xl text-upds-white font-light leading-relaxed">La fotografía actúa como una huella (índice peirceano) que suspende un flujo temporal irrepetible. Transformamos energía cinética en una estructura sincrónica y un signo permanente.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white flex flex-col justify-center px-24" data-slide="6">
+            <div class="animate-fade-up w-full max-w-6xl mx-auto">
+                <div class="flex items-center gap-12">
+                    <div class="w-1/2">
+                        <h2 class="text-5xl font-bold text-upds-blue mb-6 font-serif">Sintaxis Visual y Montaje</h2>
+                        <p class="text-2xl text-gray-800 mb-6 font-light">El sentido no reside en un plano aislado, sino en su colisión sintagmática.</p>
+                        <p class="text-gray-600 leading-relaxed mb-8">El efecto Kuleshov demuestra que el choque entre dos imágenes consecutivas crea un tercer significado invisible en la mente del espectador. El montaje construye causalidad y continuidad diegética.</p>
+                    </div>
+                    <div class="w-1/2 relative h-96 rounded-2xl overflow-hidden shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1920&auto=format&fit=crop" alt="Tira de celuloide" class="absolute inset-0 w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-black" data-slide="7">
+            <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1920&auto=format&fit=crop" alt="Proyector de cine iluminando la sala" class="absolute inset-0 w-full h-full object-cover opacity-60">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent flex flex-col justify-end px-24 pb-24">
+                <div class="animate-fade-up max-w-4xl">
+                    <h2 class="text-5xl font-bold text-upds-white mb-6 font-serif">Expresividad Visual: Clima y Atmósfera</h2>
+                    <div class="grid grid-cols-3 gap-8 border-t border-white/20 pt-8 mt-4">
+                        <div>
+                            <h4 class="text-upds-light font-bold text-xl mb-2">La Luz como Código</h4>
+                            <p class="text-gray-300 text-sm">Clave alta vs. clave baja. Modelador narrativo, no solo iluminación técnica.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-upds-light font-bold text-xl mb-2">Temperatura</h4>
+                            <p class="text-gray-300 text-sm">Cromática cálida o fría que afecta psicológicamente el pacto emocional.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-upds-light font-bold text-xl mb-2">Textura</h4>
+                            <p class="text-gray-300 text-sm">El grano y el contraste como significantes de crudeza, misterio o realismo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white flex" data-slide="8">
+            <div class="w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1920&auto=format&fit=crop" alt="Fotografía de producto construida" class="absolute inset-0 w-full h-full object-cover">
+            </div>
+            <div class="w-1/2 flex flex-col justify-center px-20 bg-upds-light/20">
+                <div class="animate-fade-up">
+                    <h2 class="text-4xl font-bold text-upds-blue mb-8 font-serif">El Referente: De lo Real a lo Simbólico</h2>
+                    <p class="text-xl text-gray-800 mb-8 font-light">Transición del referente biológico al objeto mercantilizado y codificado culturalmente.</p>
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-upds-blue">
+                            <h3 class="font-bold text-gray-900 mb-1">1. Huella Indexical</h3>
+                            <p class="text-gray-600 text-sm">El objeto real capturado frente al lente (lo que ha sido).</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-upds-blue">
+                            <h3 class="font-bold text-gray-900 mb-1">2. Convención Icónica</h3>
+                            <p class="text-gray-600 text-sm">La escenificación y la puesta en escena publicitaria.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-upds-blue">
+                            <h3 class="font-bold text-gray-900 mb-1">3. Carga Simbólica</h3>
+                            <p class="text-gray-600 text-sm">Construcción de mitologías visuales y estatus abstracto.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-dark flex flex-col justify-center px-24" data-slide="9">
+            <div class="animate-fade-up w-full max-w-7xl mx-auto">
+                <h2 class="text-5xl font-bold text-upds-white mb-4 font-serif text-center">Funciones Narrativas del Plano</h2>
+                <p class="text-xl text-upds-light text-center mb-12 font-light">La escala del plano modula la distancia psicológica y afectiva del espectador.</p>
+                
+                <div class="grid grid-cols-3 gap-6">
+                    <div class="group relative overflow-hidden rounded-xl h-80">
+                        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1920&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+                            <h3 class="text-white font-bold text-xl">Gran Plano General</h3>
+                            <p class="text-gray-300 text-sm">Dominio geográfico, inmensidad, aislamiento.</p>
+                        </div>
+                    </div>
+                    <div class="group relative overflow-hidden rounded-xl h-80">
+                        <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=1920&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+                            <h3 class="text-white font-bold text-xl">Plano Medio</h3>
+                            <p class="text-gray-300 text-sm">Interacción social, contexto conversacional.</p>
+                        </div>
+                    </div>
+                    <div class="group relative overflow-hidden rounded-xl h-80">
+                        <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1920&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+                            <h3 class="text-white font-bold text-xl">Primer Plano</h3>
+                            <p class="text-gray-300 text-sm">Intimidad psicológica, revelación de códigos gestuales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white flex" data-slide="10" data-brand-right="dark">
+            <div class="w-1/2 flex flex-col justify-center px-20 z-10 animate-fade-up">
+                <span class="text-upds-blue font-bold tracking-wider uppercase text-sm mb-4">Taller Analítico</span>
+                <h2 class="text-5xl font-bold text-gray-900 mb-8 font-serif">Lectura Semiótica Aplicada</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-xl font-bold text-upds-blue mb-2 border-b border-gray-200 pb-2">1. Nivel Denotativo</h4>
+                        <p class="text-gray-600">Sujetos, utilería, distribución espacial, paleta de colores neón, contraste de escalas.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-upds-blue mb-2 border-b border-gray-200 pb-2">2. Nivel Connotativo</h4>
+                        <p class="text-gray-600">Esquema lumínico artificial, aislamiento emocional, superioridad visual del holograma.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-upds-blue mb-2 border-b border-gray-200 pb-2">3. Dimensión Ideológica</h4>
+                        <p class="text-gray-600">Alienación tecnológica, mercantilización del afecto en un contexto hipercapitalista y vacío existencial.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=1920&auto=format&fit=crop" alt="Ciudad Cyberpunk Neon" class="absolute inset-0 w-full h-full object-cover">
+            </div>
+        </div>
+
+        <div class="slide bg-gray-50 flex flex-col justify-center px-24" data-slide="11">
+            <div class="animate-fade-up max-w-6xl mx-auto flex items-center gap-16">
+                <div class="w-1/2">
+                    <h2 class="text-5xl font-bold text-upds-blue mb-6 font-serif">La Cultura del Meme</h2>
+                    <h3 class="text-2xl text-gray-800 mb-6 font-light">Unidades semióticas mutables de alta condensación.</h3>
+                    <ul class="space-y-4 text-gray-600 text-lg">
+                        <li class="flex items-start"><span class="text-upds-blue font-bold mr-3">•</span> El texto como anclaje o relevo (Roland Barthes).</li>
+                        <li class="flex items-start"><span class="text-upds-blue font-bold mr-3">•</span> Ironía, descontextualización y resignificación colectiva.</li>
+                        <li class="flex items-start"><span class="text-upds-blue font-bold mr-3">•</span> Una imagen de stock pierde su significado primitivo para ser una matriz relacional.</li>
+                    </ul>
+                </div>
+                <div class="w-1/2">
+                    <img src="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?q=80&w=1920&auto=format&fit=crop" alt="Meme visual" class="rounded-2xl shadow-2xl w-full h-auto object-cover transform rotate-2 hover:rotate-0 transition-transform duration-500 border-8 border-white">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-dark flex" data-slide="12">
+            <div class="w-5/12 bg-black flex justify-center items-center py-12 relative overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1920&auto=format&fit=crop" alt="Grabando con smartphone" class="absolute inset-0 w-full h-full object-cover opacity-40 blur-sm">
+                <div class="w-64 h-[500px] bg-gray-900 rounded-[3rem] border-8 border-gray-800 relative z-10 overflow-hidden shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1920&auto=format&fit=crop" alt="Pantalla vertical" class="w-full h-full object-cover">
+                </div>
+            </div>
+            <div class="w-7/12 flex flex-col justify-center px-20">
+                <div class="animate-fade-up">
+                    <h2 class="text-5xl font-bold text-upds-white mb-8 font-serif">Micro-Narrativas Verticales</h2>
+                    <h3 class="text-2xl text-upds-light mb-8">Reels, TikTok y la Gramática 9:16</h3>
+                    <div class="space-y-6 text-upds-white/80 text-lg font-light">
+                        <p><strong class="text-white">Hiperproximidad:</strong> El formato vertical elimina el contexto panorámico y genera una proximidad física simulada con el emisor.</p>
+                        <p><strong class="text-white">Sintaxis Acelerada:</strong> Ritmo de montaje sincopado, adaptado al compás de audios en tendencia (sound bites).</p>
+                        <p><strong class="text-white">Interfaz como Encuadre:</strong> Los iconos, comentarios y métricas de la app ya son parte integral del marco semiótico.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white" data-slide="13">
+            <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1920&auto=format&fit=crop" alt="Redes y viralidad" class="absolute inset-0 w-full h-full object-cover opacity-20">
+            <div class="absolute inset-0 flex flex-col justify-center px-24">
+                <div class="animate-fade-up max-w-4xl bg-white/90 backdrop-blur-md p-16 rounded-3xl shadow-2xl border border-gray-100">
+                    <h2 class="text-5xl font-bold text-upds-blue mb-6 font-serif">Viralidad: El Signo Multiplicado</h2>
+                    <p class="text-2xl text-gray-800 mb-8 font-light italic">Semiosis infinita en la era digital.</p>
+                    <div class="h-1 w-20 bg-upds-blue mb-8"></div>
+                    <p class="text-lg text-gray-600 leading-relaxed mb-6">Cuando un signo se vuelve viral, la autoría original se desintegra. La red opera de manera rizomática, sin un centro emisor unívoco.</p>
+                    <p class="text-lg text-gray-600 leading-relaxed">La comunidad se apropia del significante, abriendo una cadena infinita de interpretantes y adaptaciones locales (apropiación cultural del fenómeno global).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-gray-100 flex flex-col justify-center px-20" data-slide="14">
+            <div class="animate-fade-up">
+                <h2 class="text-5xl font-bold text-upds-blue mb-4 font-serif text-center">La Estética Dominante y la Homogeneización</h2>
+                <p class="text-xl text-gray-600 text-center mb-12">El algoritmo premia estilos que aplanan la diversidad visual.</p>
+                
+                <div class="grid grid-cols-3 gap-8">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1920&auto=format&fit=crop" style="filter: grayscale(0.5) contrast(0.9);" class="w-full h-64 object-cover">
+                        <div class="p-6 text-center">
+                            <h4 class="font-bold text-gray-900">Cruda (RAW)</h4>
+                            <p class="text-sm text-gray-500">Imagen sin intervención</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1920&auto=format&fit=crop" style="filter: sepia(0.4) saturate(1.5) contrast(1.1);" class="w-full h-64 object-cover">
+                        <div class="p-6 text-center">
+                            <h4 class="font-bold text-gray-900">Filtro Cálido</h4>
+                            <p class="text-sm text-gray-500">Tendencia "Golden" algorítmica</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1920&auto=format&fit=crop" style="filter: contrast(1.2) brightness(0.9) blur(0.5px);" class="w-full h-64 object-cover relative">
+                        <div class="p-6 text-center">
+                            <h4 class="font-bold text-gray-900">Simulación Analógica</h4>
+                            <p class="text-sm text-gray-500">Grano y nostalgia artificial</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white flex" data-slide="15">
+            <div class="w-1/2 flex flex-col justify-center px-24 z-10 animate-fade-up">
+                <h2 class="text-5xl font-bold text-gray-900 mb-8 font-serif">El "Yo Digital": Identidad Escenificada</h2>
+                <div class="space-y-6 text-lg text-gray-600 font-light leading-relaxed">
+                    <p>El <em>feed</em> curado actúa como un portafolio personal donde se desdibujan los límites entre la esfera íntima y pública.</p>
+                    <blockquote class="border-l-4 border-upds-blue pl-6 py-2 my-8 bg-gray-50 italic font-medium text-upds-blue">
+                        "El sujeto no solo comunica: se convierte en su propio enunciado y mercancía."
+                    </blockquote>
+                    <p>Construimos retratos editados para proyectar un estilo de vida que responde a cánones estrictos de validación social y estética (ej. el plano cenital o *flat lay*).</p>
+                </div>
+            </div>
+            <div class="w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1493612276216-ee3925520721?q=80&w=1920&auto=format&fit=crop" alt="Flat lay estilo de vida" class="absolute inset-0 w-full h-full object-cover">
+            </div>
+        </div>
+
+        <div class="slide bg-upds-dark flex" data-slide="16">
+            <div class="w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1920&auto=format&fit=crop" alt="Rostro IA Wireframe" class="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-screen">
+            </div>
+            <div class="w-1/2 flex flex-col justify-center px-20 bg-overlay-dark">
+                <div class="animate-fade-up">
+                    <h2 class="text-4xl font-bold text-upds-white mb-6 font-serif">Alfabetización Visual e Imágenes Sintéticas</h2>
+                    <h3 class="text-xl text-upds-light font-light mb-8">El fin de la indexicalidad clásica.</h3>
+                    <ul class="space-y-6 text-upds-white/90">
+                        <li class="flex items-start">
+                            <svg class="concept-icon concept-icon-light mr-4" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="5" y="7" width="38" height="34" rx="3"></rect>
+                                <path d="M11 34l9-10 6 6 4-4 7 8"></path>
+                                <path d="M15 16h.01"></path>
+                                <circle cx="32" cy="17" r="3"></circle>
+                                <path d="M32 10v-3m0 20v-3m10-7h-3m-14 0h-3m17-7-2 2m-16 12-2 2m20 0-2-2m-16-12-2-2"></path>
+                            </svg>
+                            <div>
+                                <strong class="block text-white">IA Generativa y Deepfakes</strong>
+                                <span class="font-light text-sm">La imagen ya no requiere un referente físico en la realidad material.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="concept-icon concept-icon-light mr-4" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 24s7-12 19-12 19 12 19 12-7 12-19 12S5 24 5 24z"></path>
+                                <circle cx="24" cy="24" r="6"></circle>
+                                <circle cx="24" cy="24" r="1.5" fill="currentColor" stroke="none"></circle>
+                                <path d="M7 7v5h5m29 0V7h-5M7 41v-5h5m29 0v5h-5"></path>
+                            </svg>
+                            <div>
+                                <strong class="block text-white">Mirada Crítica Activa</strong>
+                                <span class="font-light text-sm">El trabajo semiótico muta: ahora consiste en evaluar la intención algorítmica y la ética de circulación.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white flex flex-col justify-center px-24" data-slide="17">
+            <div class="animate-fade-up w-full max-w-6xl mx-auto flex items-center gap-16">
+                <div class="w-5/12 relative h-[500px]">
+                    <img src="https://images.unsplash.com/photo-1520116468816-95b69f847357?q=80&w=1920&auto=format&fit=crop" alt="Foto vintage en papel" class="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-2xl">
+                </div>
+                <div class="w-7/12">
+                    <h2 class="text-5xl font-bold text-upds-blue mb-8 font-serif">Materialidad: Del Soporte al Píxel</h2>
+                    <p class="text-xl text-gray-800 mb-6 font-medium">El soporte físico media el sentido del mensaje.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="p-6 bg-gray-50 border border-gray-200 rounded-xl">
+                            <h4 class="font-bold text-upds-blue mb-2">Objeto Físico (Analógico)</h4>
+                            <p class="text-gray-600 text-sm">Posee textura, gramaje, anclaje táctil y evidencia el paso del tiempo (desgaste del papel baritado o celuloide).</p>
+                        </div>
+                        <div class="p-6 bg-upds-light/30 border border-upds-blue/20 rounded-xl">
+                            <h4 class="font-bold text-upds-blue mb-2">Objeto Electrónico (Digital)</h4>
+                            <p class="text-gray-600 text-sm">Desmaterialización absoluta. La imagen se vuelve código binario infinitamente reproducible, volátil y retroiluminada por pantallas OLED.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-black" data-slide="18">
+            <img src="https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?q=80&w=1920&auto=format&fit=crop" alt="Equipo de filmación" class="absolute inset-0 w-full h-full object-cover opacity-50">
+            <div class="absolute inset-0 flex flex-col justify-center px-24">
+                <div class="animate-fade-up max-w-3xl">
+                    <h2 class="text-5xl font-bold text-upds-white mb-6 font-serif">Contextos de Producción</h2>
+                    <p class="text-2xl text-upds-light mb-8 font-light">Desentrañando el origen institucional.</p>
+                    
+                    <div class="bg-upds-blue/80 backdrop-blur-md p-8 rounded-2xl border-l-8 border-upds-white">
+                        <p class="text-white text-lg leading-relaxed mb-4">Una imagen no nace en el vacío. Está condicionada por presupuestos, tecnologías disponibles y marcados intereses económicos.</p>
+                        <p class="text-upds-light/80 text-sm font-semibold uppercase tracking-wider">Preguntas semióticas clave:</p>
+                        <ul class="text-white mt-2 space-y-2 font-light">
+                            <li>¿Quién financia el encuadre?</li>
+                            <li>¿Qué intenciones institucionales u ocultas operan?</li>
+                            <li>¿Cuál es el contraste sociocultural entre el emisor y lo retratado?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white flex" data-slide="19" data-brand-left="dark">
+            <div class="w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=1920&auto=format&fit=crop" alt="Audiencia en cine" class="absolute inset-0 w-full h-full object-cover grayscale">
+            </div>
+            <div class="w-1/2 flex flex-col justify-center px-20">
+                <div class="animate-fade-up">
+                    <h2 class="text-4xl font-bold text-upds-blue mb-4 font-serif">El Medio Formatea la Recepción</h2>
+                    <p class="text-lg text-gray-500 italic mb-8">"El medio es el mensaje" — McLuhan revisitado.</p>
+                    
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Escala Inmersiva (Cine/Museo)</h3>
+                            <p class="text-gray-600">Fomenta la contemplación profunda, el ritual colectivo ceremonial y la introspección.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Microescala (Dispositivo Móvil)</h3>
+                            <p class="text-gray-600">Impone un consumo fragmentado, atomizado, individualista y condicionado por el *multitasking*.</p>
+                        </div>
+                        <div class="w-16 h-1 bg-upds-blue"></div>
+                        <p class="text-sm font-bold text-upds-blue uppercase tracking-widest">El soporte define el tiempo de atención.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-dark flex flex-col justify-center px-24" data-slide="20">
+            <div class="animate-fade-up w-full max-w-6xl mx-auto flex items-center gap-16">
+                <div class="w-1/2 text-upds-white">
+                    <h2 class="text-5xl font-bold mb-8 font-serif">El Público como Intérprete Activo</h2>
+                    <p class="text-xl text-upds-light mb-6 font-light">El receptor no es un recipiente pasivo; es un productor de sentido.</p>
+                    <ul class="space-y-4 text-white/80 border-t border-white/20 pt-6">
+                        <li><strong class="text-white">El Lector Modelo:</strong> (Umberto Eco) La obra abierta a completarse.</li>
+                        <li><strong class="text-white">Decodificación de Oposición:</strong> (Stuart Hall) Rechazo del discurso hegemónico.</li>
+                        <li><strong class="text-white">Culture Jamming:</strong> Sabotaje semiótico y apropiación del espacio publicitario.</li>
+                    </ul>
+                </div>
+                <div class="w-1/2 relative h-[450px]">
+                    <img src="https://images.unsplash.com/photo-1508804052814-cd3ba865a116?q=80&w=1920&auto=format&fit=crop" alt="Graffiti sobre publicidad" class="absolute inset-0 w-full h-full object-cover rounded-xl border-4 border-white/10">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white flex" data-slide="21" data-brand-right="dark">
+            <div class="w-1/2 flex flex-col justify-center px-24 z-10 animate-fade-up">
+                <h2 class="text-5xl font-bold text-gray-900 mb-8 font-serif">Circulación, Remix y Memoria Visual</h2>
+                <div class="space-y-6 text-lg text-gray-600 font-light leading-relaxed">
+                    <p><strong class="text-upds-blue">La Cultura de la Posproducción:</strong> Toda imagen del pasado es material reciclable para construir nuevas narrativas contemporáneas.</p>
+                    <p>La memoria visual colectiva reside en repositorios abiertos. Asistimos a la pérdida del "original" en favor del palimpsesto digital y el collage intertextual.</p>
+                </div>
+            </div>
+            <div class="w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=1920&auto=format&fit=crop" alt="Naturaleza muerta floral de pintura clásica" class="absolute inset-0 w-full h-full object-cover">
+            </div>
+        </div>
+
+        <div class="slide bg-gray-100 flex flex-col justify-center px-20 text-center" data-slide="22">
+            <div class="animate-fade-up w-full max-w-6xl mx-auto">
+                <h2 class="text-5xl font-bold text-upds-blue mb-4 font-serif">Mutación del Signo según el Contexto</h2>
+                <p class="text-xl text-gray-600 mb-12">El marco institucional define la función y el significado del signo visual.</p>
+                
+                <div class="grid grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-gray-400">
+                        <div class="h-48 mb-4 overflow-hidden rounded-lg relative">
+                            <div class="absolute inset-0 bg-gray-800 mix-blend-color"></div>
+                            <img src="https://images.unsplash.com/photo-1574182245530-967d9b3831af?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover grayscale">
+                        </div>
+                        <h4 class="font-bold text-gray-900 text-lg">1. Archivo Policial</h4>
+                        <p class="text-sm text-gray-500">Valor de prueba pericial e índice judicial.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-upds-blue">
+                        <div class="h-48 mb-4 overflow-hidden rounded-lg relative">
+                            <img src="https://images.unsplash.com/photo-1574182245530-967d9b3831af?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="font-bold text-upds-blue text-lg">2. Marco de Museo</h4>
+                        <p class="text-sm text-gray-500">Valor estético, aurático y de contemplación.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-pink-500">
+                        <div class="h-48 mb-4 overflow-hidden rounded-lg relative flex items-center justify-center bg-gray-900">
+                             <img src="https://images.unsplash.com/photo-1574182245530-967d9b3831af?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover opacity-70">
+                             <svg class="concept-icon absolute text-white" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                 <rect x="10" y="4" width="28" height="40" rx="4"></rect>
+                                 <path d="M15 10h18M15 15h10"></path>
+                                 <path d="M24 34s-8-4.8-8-10a4.3 4.3 0 0 1 8-2 4.3 4.3 0 0 1 8 2c0 5.2-8 10-8 10z"></path>
+                             </svg>
+                        </div>
+                        <h4 class="font-bold text-gray-900 text-lg">3. Redes Sociales</h4>
+                        <p class="text-sm text-gray-500">Consumo efímero, mercantilizado y espectacular.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-dark flex" data-slide="23">
+            <div class="w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1920&auto=format&fit=crop" alt="Mesa de trabajo análisis" class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-luminosity">
+            </div>
+            <div class="w-1/2 flex flex-col justify-center px-20 bg-overlay-dark">
+                <div class="animate-fade-up">
+                    <h2 class="text-4xl font-bold text-upds-white mb-8 font-serif">Metodología de Análisis Crítico en Aula</h2>
+                    <div class="space-y-6">
+                        <div class="border-l-2 border-upds-light pl-6">
+                            <h4 class="text-upds-light font-bold text-xl mb-1">1. Inventario Denotativo</h4>
+                            <p class="text-gray-300 text-sm">Descripción objetiva: morfología, sujetos, luz y encuadre.</p>
+                        </div>
+                        <div class="border-l-2 border-upds-light pl-6">
+                            <h4 class="text-upds-light font-bold text-xl mb-1">2. Desglose Connotativo</h4>
+                            <p class="text-gray-300 text-sm">Asociaciones simbólicas, metáforas visuales y estereotipos latentes.</p>
+                        </div>
+                        <div class="border-l-2 border-upds-light pl-6">
+                            <h4 class="text-upds-light font-bold text-xl mb-1">3. Relación Texto-Imagen</h4>
+                            <p class="text-gray-300 text-sm">Análisis de anclaje, relevo y plataforma de difusión.</p>
+                        </div>
+                        <div class="border-l-2 border-white pl-6">
+                            <h4 class="text-white font-bold text-xl mb-1">4. Crítica Sociocultural</h4>
+                            <p class="text-gray-200 text-sm font-medium">Desmontaje de la ideología implícita y pertinencia del discurso visual.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-white flex flex-col justify-center items-center text-center px-20" data-slide="24">
+            <img src="https://images.unsplash.com/photo-1554147090-e1221a04a025?q=80&w=1920&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-10">
+            <div class="animate-fade-up max-w-4xl relative z-10 bg-white/95 p-16 rounded-3xl shadow-xl border border-gray-100">
+                <h2 class="text-4xl font-bold text-upds-blue mb-8 font-serif">Directrices del Proyecto Práctico</h2>
+                <p class="text-xl text-gray-600 mb-10">Del análisis pasivo a la producción visual con intencionalidad simbólica.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                    <div>
+                        <svg class="concept-icon mb-4" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M7 15h8l3-5h12l3 5h8v25H7z"></path>
+                            <circle cx="24" cy="27" r="9"></circle>
+                            <circle cx="24" cy="27" r="5"></circle>
+                            <path d="M12 20h.01"></path>
+                        </svg>
+                        <h4 class="font-bold text-gray-900 mb-2">Producción Visual</h4>
+                        <p class="text-sm text-gray-600">Creación de una serie fotográfica (3-5 imágenes) o pieza audiovisual corta.</p>
+                    </div>
+                    <div>
+                        <svg class="concept-icon mb-4" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M6 17V7h10M32 7h10v10M42 31v10H32M16 41H6V31"></path>
+                            <circle cx="24" cy="24" r="9"></circle>
+                            <path d="M24 15v18M15 24h18"></path>
+                        </svg>
+                        <h4 class="font-bold text-gray-900 mb-2">Justificación Técnica</h4>
+                        <p class="text-sm text-gray-600">Explicación teórica de encuadres, esquemas lumínicos y códigos cromáticos.</p>
+                    </div>
+                    <div>
+                        <svg class="concept-icon mb-4" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 5h17l8 8v30H12z"></path>
+                            <path d="M29 5v9h8M18 21h13M18 27h13"></path>
+                            <circle cx="20" cy="35" r="2"></circle>
+                            <circle cx="31" cy="35" r="2"></circle>
+                            <path d="M22 35h7"></path>
+                        </svg>
+                        <h4 class="font-bold text-gray-900 mb-2">Memoria Semiótica</h4>
+                        <p class="text-sm text-gray-600">Defensa escrita de la intencionalidad comunicacional y su pertinencia ética.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide bg-upds-dark" data-slide="25">
+            <img src="https://images.unsplash.com/photo-1416339442236-8ceb164046f8?q=80&w=1920&auto=format&fit=crop" alt="Fotógrafo al atardecer" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end items-center text-center pb-32 px-10">
+                <div class="animate-fade-up max-w-5xl">
+                    <h2 class="text-5xl lg:text-7xl font-bold text-upds-white mb-8 font-serif drop-shadow-lg">Hacia una Ética y<br>Ecología de la Mirada</h2>
+                    <div class="w-24 h-1 bg-upds-white mx-auto mb-8"></div>
+                    <p class="text-2xl text-upds-white font-light drop-shadow-md">La semiótica visual no busca complicar la imagen,<br><strong class="font-bold">sino liberarla de la obviedad.</strong></p>
+                    <p class="text-lg text-upds-light mt-6 tracking-widest uppercase">Fin de la Unidad 3</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 right-12 flex items-center gap-6 z-50">
+            <!-- Contador -->
+            <div class="text-white bg-black/40 backdrop-blur-md px-4 py-2 rounded-full font-bold tracking-widest text-sm border border-white/20">
+                <span id="current">1</span> / 25
+            </div>
+            
+            <!-- Botones -->
+            <button id="prevBtn" class="bg-white/10 hover:bg-upds-blue text-white p-4 rounded-full backdrop-blur-md transition-all duration-300 border border-white/30 disabled:opacity-30 disabled:cursor-not-allowed">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <button id="nextBtn" class="bg-white/10 hover:bg-upds-blue text-white p-4 rounded-full backdrop-blur-md transition-all duration-300 border border-white/30 disabled:opacity-30 disabled:cursor-not-allowed">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+
+        <!-- Barra de progreso superior -->
+        <div class="absolute top-0 left-0 w-full h-1.5 bg-gray-800 z-50">
+            <div id="progressBar" class="h-full bg-upds-blue transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,69,150,0.8)]" style="width: 4%;"></div>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const currentEl = document.getElementById('current');
+            const progressBar = document.getElementById('progressBar');
+            const updsLogo = document.getElementById('upds-logo');
+            const anniversaryLogo = document.getElementById('anniversary-logo');
+            const leftBrandLine = document.querySelector('.brand-lines[data-brand-side="left"]');
+            const rightBrandLine = document.querySelector('.brand-lines[data-brand-side="right"]');
+            
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            function updateSlides() {
+                slides.forEach((slide, index) => {
+                    if (index === currentSlide) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+
+                const isDarkSlide = slides[currentSlide].classList.contains('bg-upds-dark')
+                    || slides[currentSlide].classList.contains('bg-black');
+                const defaultTheme = isDarkSlide ? 'dark' : 'light';
+                const slide = slides[currentSlide];
+                const leftTheme = slide.dataset.brandLeft || defaultTheme;
+                const rightTheme = slide.dataset.brandRight || defaultTheme;
+                leftBrandLine.dataset.theme = leftTheme;
+                rightBrandLine.dataset.theme = rightTheme;
+                updsLogo.src = rightTheme === 'dark'
+                    ? 'https://upds-my.sharepoint.com/:i:/g/personal/tj_jaime_claure_a_upds_edu_bo/IQD2_Rqo8skqSLWbCqkx7Jc1AYfGCNI5G30dOgTchZTcVLg?e=IYAt46&download=1'
+                    : 'https://upds-my.sharepoint.com/:i:/g/personal/tj_jaime_claure_a_upds_edu_bo/IQBVJa9UgR68SbKXaGQXQcCpASys64LZhMOi1E6Mw4QkYLU?e=rR167h&download=1';
+                anniversaryLogo.src = leftTheme === 'dark'
+                    ? 'https://upds-my.sharepoint.com/:i:/g/personal/tj_jaime_claure_a_upds_edu_bo/IQDUTf4ikZv6Q6WBA4oTc3jzAWZJiyL2XjOFAdf4OrW_TEk?e=ChNzmG&download=1'
+                    : 'https://upds-my.sharepoint.com/:i:/g/personal/tj_jaime_claure_a_upds_edu_bo/IQCBZTEEXyjZTZHZZqYNaKmSAR8AGVMaaC22hHHMhHbzRt0?e=oUl4Yo&download=1';
+
+                // Actualizar UI
+                currentEl.textContent = currentSlide + 1;
+                progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+                
+                // Estados de botones
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+
+                // Cambiar color del contador según el fondo de la diapositiva para que sea visible
+                const activeSlideBg = window.getComputedStyle(slides[currentSlide]).backgroundColor;
+                // Lógica simplificada: los botones siempre tendrán fondo oscuro translúcido para contraste universal.
+            }
+
+            function next() {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlides();
+                }
+            }
+
+            function prev() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlides();
+                }
+            }
+
+            // Eventos de click
+            nextBtn.addEventListener('click', next);
+            prevBtn.addEventListener('click', prev);
+
+            // Eventos de teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === 'Space') {
+                    next();
+                } else if (e.key === 'ArrowLeft') {
+                    prev();
+                }
+            });
+
+            // Inicializar
+            updateSlides();
+        });
+    </script>
+</body>
+</html>

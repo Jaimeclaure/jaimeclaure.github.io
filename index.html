@@ -16,10 +16,9 @@
     <style>
         :root {
             --bg-dark: #030712;
-            --color-cyan: #06B6D4;
-            --color-cyan-glow: rgba(6, 182, 212, 0.15);
-            --color-orange: #F59E0B;
-            /* Ámbar nítido para call-to-action */
+            --color-olive: #929B6A;
+            --color-olive-glow: rgba(146, 155, 106, 0.15);
+            --color-ochre: #C3924E;
             --bg-card: #0B0F19;
             --bg-card-hover: #111827;
             --text-main: #F3F4F6;
@@ -105,7 +104,7 @@
             font-size: 11px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: var(--color-cyan);
+            color: var(--color-olive);
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -148,10 +147,10 @@
         }
 
         .btn-terminal:hover {
-            border-color: var(--color-cyan);
-            background: var(--color-cyan-glow);
+            border-color: var(--color-olive);
+            background: var(--color-olive-glow);
             color: #FFFFFF;
-            box-shadow: 0 0 16px rgba(6, 182, 212, 0.25);
+            box-shadow: 0 0 16px rgba(146, 155, 106, 0.25);
             transform: translateY(-1px);
         }
 
@@ -311,38 +310,38 @@
             transition: all 0.2s ease;
         }
 
-        .action-cyan {
-            color: var(--color-cyan);
-            border-color: rgba(6, 182, 212, 0.2);
+        .action-olive {
+            color: var(--color-olive);
+            border-color: rgba(146, 155, 106, 0.28);
         }
 
-        .action-cyan:hover {
+        .action-olive:hover {
             color: #FFFFFF;
-            background: var(--color-cyan);
-            border-color: var(--color-cyan);
-            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+            background: var(--color-olive);
+            border-color: var(--color-olive);
+            box-shadow: 0 0 12px rgba(146, 155, 106, 0.4);
         }
 
-        .action-orange {
-            color: var(--color-orange);
-            border-color: rgba(245, 158, 11, 0.2);
+        .action-ochre {
+            color: var(--color-ochre);
+            border-color: rgba(195, 146, 78, 0.28);
         }
 
-        .action-orange:hover {
+        .action-ochre:hover {
             color: #030712;
-            background: var(--color-orange);
-            border-color: var(--color-orange);
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+            background: var(--color-ochre);
+            border-color: var(--color-ochre);
+            box-shadow: 0 0 12px rgba(195, 146, 78, 0.4);
         }
 
         /* LED indicador */
         .led-pulse {
             width: 8px;
             height: 8px;
-            background-color: var(--color-cyan);
+            background-color: var(--color-olive);
             border-radius: 50%;
             display: inline-block;
-            box-shadow: 0 0 8px var(--color-cyan);
+            box-shadow: 0 0 8px rgba(146, 155, 106, 0.8);
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
@@ -451,7 +450,7 @@
                         <p class="card-title">Documento</p>
                         <p class="card-meta">Format: PDF Protected • Target: docs/docs.pdf</p>
                     </div>
-                    <a href="visor.html" target="_blank" class="card-action action-cyan">
+                    <a href="visor.html" target="_blank" class="card-action action-olive">
                         LEER →
                     </a>
                 </div>
@@ -462,7 +461,7 @@
                         <p class="card-title">Presentación</p>
                         <p class="card-meta">Format: Responsive SPA Deck • Target: slides/</p>
                     </div>
-                    <a id="btn-slides" href="slides/" target="_blank" class="card-action action-orange">
+                    <a id="btn-slides" href="slides/" target="_blank" class="card-action action-ochre">
                         PRESENTAR →
                     </a>
                 </div>
@@ -474,7 +473,7 @@
                         <p class="card-meta">Format: Git Infrastructure • Scope: Source Assets</p>
                     </div>
                     <a href="https://github.com/Jaimeclaure" target="_blank" rel="noopener noreferrer"
-                        class="card-action action-cyan">
+                        class="card-action action-olive">
                         VER →
                     </a>
                 </div>
